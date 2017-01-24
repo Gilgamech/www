@@ -1,0 +1,2392 @@
+# C:\Dropbox\Public\html5\PS1\PowerGIL.ps1 Build: 411 2016-05-29T17:07:36 Copyright Gilgamech Technologies  
+# Update Path: http://Gilgamech.com/PS1/PowerGIL.ps1
+# Build : LineNo : Update Notes
+# 407 : 510 :   [array]$ScriptBlock,
+# 408 : 354 : if (!($test-path $buildpath)) {  md $buildpath }; #end if test-path $buildpath
+# 409 : 354 :  if (!($test-path $buildpath)) {   md $buildpath  }; #end if test-path $buildpath
+# 410 : 354 :  if (!((test-path $buildpath))) {   md $buildpath  }; #end if (test-path $buildpath)
+# 411 : 599 : if ($scriptblock) {    }; #end if scriptblock
+
+#region header
+#	To run this, put these in your profile, and set them appropriately: 
+# 
+#$BasePath = "C:\Dropbox"
+#$ProgramsPath = $BasePath + "\Programs"
+#$ReposPath = $BasePath + "\repos"
+#$DocsPath = $BasePath + "\Docs"
+#$UtilPath = $ProgramsPath + "\util"
+#$VIMPATH = $UtilPath + "\vim74\vim.exe"
+#$LynxW32Path = $UtilPath + "\lynx_w32\lynx.exe"
+#$GITPath = $ProgramsPath + "\Git\bin\git.exe"
+#$modulesFolder = $BasePath + "\Public\html5\PS1"
+#$PowerGIL = $modulesFolder + "\PowerGIL.ps1"
+#$NppPath = $ProgramsPath + "\N++\notepad++.exe"
+#
+# Import-Module $PowerGIL
+# 
+#$DontShowPSVersionOnStartup = $true # to turn off Powershell Version display.
+# 
+# 
+#endregion
+
+#region FLAG
+#Param-Protection prevents duplicate parameters!
+#FunctionGuard keeps you out of 
+#Auto-Debug & Auto-Verbose (Coming Soon!)
+#Easy to understand GilFile language
+#Dynamic parameter rebuilder (Beta!)
+#
+#GilFile function:
+#New-Modulex FizzBuzz.ps1 (New-Function2 Filter-FizzBuzz (nfs If _ Modulus 15 'return "FizzBuzz"' (nfs if _ Modulus 5 'return "Fizz"' (nfs if _ Modulus 3 'return "Buzz"' 'return $_' -not ) -not ) -not ) -Filter) 
+#
+#New-Function2 Filter-FizzBuzz (nfs If _ Modulus 15 'return "FizzBuzz"' (nfs if _ Modulus 5 'return "Fizz"' (nfs if _ Modulus 3 'return "Buzz"' 'return $_' -not ) -not ) -not ) -Filter
+#nfs if _ Modulus 5 'return "Buzz"' -not
+#New-Module FizzBuzz.ps1 (nf2 Filter-FizzBuzz (nfs If _ Modulus 15 'return "FizzBuzz"' (nfs if _ Modulus 5 'return "Fizz"' (nfs if _ Modulus 3 'return "Buzz"' 'return $_' -not ) -not ) -not ) -Filter) 
+#nf2 Filter-FizzBuzz (nfs If _ Modulus 15 'return "FizzBuzz"' (nfs elseif _ Modulus 5 'return "Fizz"' (nfs elseif _ Modulus 3 'return "Buzz"' 'return $_' -not ) -not ) -not ) -Filter
+#nfs if '(test-path $buildpath)' -ScriptBlock 'md $buildpath' -not -tab 1
+
+#Insert-TextIntoFile needs to break up Functions in the build log so Find-Function doesn't trip over that...Or make Find-Function jump past all that...
+#[object]$rc = "" | select "dog","frog","log" ; $rc.dog=2
+#Get-Git?
+#Make something that grabs the last thing in your Powershell buffer and clips it. 
+#need find-subroutine to find stuff inside Functions... or a -subroutine flag. 
+#need Remove-LinesFromFile 
+#New-BeginProcessEnd 
+#Have Get-ModuleVersion check Github 
+#Need to make like "PowerShiriAdmin" module that runs as admin and beats up the other Functions 
+#Validate-Module to test for errors?
+#Check-ModuleForErrors - $e = $error; ipmo $ModuleName -force; if 'diff $e $error' '"Do stuff to revert error."'
+#Add-ToValidateSet
+
+#endregion
+
+<#
+$fg = Get-ModuleVersion -Functions
+#New-ForeachStatement fg -top -bot -one -clip -ScriptBlock 'Get-CommandsFromFunction $f'
+foreach ($f in $fg) {Get-CommandsFromFunction (Find-Function $f)}; #end foreach fg
+
+$gg = Get-CommandsFromFunction
+$hh = $gg.split("._,$") | select -u #| where {$_ -ne $null}
+$hh = $hh[2..($hh.Length)]
+#New-ForeachStatement hh -top -bot -one -clip -ScriptBlock 'New-Parameter $h'
+New-Parameter Top -top; foreach ($h in $hh) {New-Parameter $h}; New-Parameter Last -bot
+
+#		[switch]$Import
+	if ($import) { #Doesn't work
+		$jqqhgpgse = "$home\jqqhgpgse.ps1"
+		$pgse > $jqqhgpgse
+		ipmo $jqqhgpgse -force
+#		rm $jqqhgpgse
+	}; #end if import
+#>
+
+#region Backup\Update\Restore
+
+<#
+git config --global user.email "stephen.gillie@gmail.com"
+git config --global user.name "Gilgamech"
+git add -A
+git commit -m "Auto-add"
+git push https://Gilgamech:password@github.com/Gilgamech/Main.git
+#>
+
+Function Update-Module {
+	Param(
+		[Parameter(Position=1)]
+		[string]$FileName = $PowerGIL,
+		[string]$Filecontents = (Get-ModuleVersion -ModuleName $FileName -Content)
+	) #end Param
+
+<#
+		$FilePath = resolve-path $FileName
+		$BuildPath = "$(split-path $FilePath)\builds"
+		if (!(test-path $BuildPath)) {md $BuildPath}
+		copy $FilePath $BuildPath\$FileName.$build
+#>
+
+	if ($Filecontents -ne $null) {
+	#Try backing it up cuz that soft-fails so we can catch and break there.
+	try {
+		#Copy-Item $FileName ((split-path $FileName) + "\Builds\$FileName.bak")
+		Copy-Item $FileName "$FileName.bak"
+	} catch {
+		Write-Verbose "File Not Found.";
+		1;
+		break;
+	}; #end try
+	Write-Host -f y "$FileName.bak created." -nonewline; Write-Host -f green " Downloading update."
+		Insert-TextIntoFile -Filecontents $Filecontents -FileName $FileName
+		#ipmo $FileName -force
+	} else {
+		Write-Host -f red 'Update was empty.'
+	}; #end if Filecontents
+		
+}; #end Update-Module
+
+
+Function Get-ModuleVersion {
+	<#
+		.SYNOPSIS
+			Returns PowerGIL version number, notes, and Function list.
+		.DESCRIPTION
+			Author   : Stephen Gillie
+			Last edit: 5/17/2016
+		.EXAMPLE
+			Get-ModuleVersion - Notes
+	#>
+	Param(
+		[string]$ModuleName = $PowerGIL,
+		[string]$UpdatePath = ((gc $ModuleName)[1].split(" ")[3]),
+		[int]$build = ([int](gc $ModuleName)[0].split(" ")[3]),
+		[switch]$notes,
+		[switch]$Functions,
+		[switch]$Content
+	) #end Param
+	
+
+		#If the Update Path starts with HTTP, treat as web request, else treat as file path.
+		if (((gc $ModuleName)[1].split(":")[1] -match "http*")) {
+			$ModuleNameRemotePS1 = try {
+				Invoke-WebRequest $UpdatePath
+			}catch{
+				Write-Verbose "404: File Not Found."
+				404
+				break
+			}; #end try
+			#$ModuleNameRemotePS1 = $ModuleNameRemotePS1.content
+		} else {
+		Write-Host -f red "Can't handle file sources yet, sry."
+		break
+			#$ModuleNameRemotePS1 = (gc $UpdatePath)
+		}; #end if gc ModuleName
+
+		
+	if ($Content) {
+		return $ModuleNameRemotePS1.Content
+	}; #end if Content
+	
+	
+	#If you could get the web version, dig out its build number. Else return 0.
+	if ($ModuleNameRemotePS1 -eq 0){
+		$ModuleNameWebVersion = 0
+	} else {
+		[int]$ModuleNameWebVersion = ($ModuleNameRemotePS1.Content.split(" ")[3])
+	}; #end if
+	
+	if  ($ModuleNameWebVersion -eq $build) {
+		#If vesions match, show green.
+		Write-Host -f green "$ModuleName Build:" $build
+
+	}elseif ($ModuleNameWebVersion -gt  $build){
+		#If the web is newer, suggest update.
+		Write-Host -f y "Installed $ModuleName Build: " -nonewline; Write-Host -f "Red" $build 
+		Write-Host -f y "Website $ModuleName Build: " -nonewline; Write-Host -f green $ModuleNameWebVersion 
+		Write-Host "You should run " -nonewline; Write-Host -f "Red" "Restart-Powershell " ;
+
+	}else{
+		#if web is older/not found, just show green instead of reporting an error. 
+		Write-Host -f green "$ModuleName Build:" $build
+	}#end if versions
+
+	#Move $UpdateNotes to Header
+	if ($notes){
+		Write-Host -f y "Build : Change notes." 
+		(gc $ModuleName)[3..7]
+	}; #end if
+
+	if ($Functions){
+		Write-Host "Functions available:" -f y
+		(cat $PowerGIL | where {$_ -like "Function *-*"}).split(" `{") | select -u
+	}; #end if
+
+	
+}; #end Get-ModuleVersion
+
+
+#Insert-TextIntoFunction to do what insop does, basically. Find function by filename and insert.
+Function Insert-TextIntoFile {
+<#
+.SYNOPSIS
+    Inserts the supplied text into the target module at the listed line number.
+.DESCRIPTION
+    Author   : Gilgamech
+    Last edit: 5/20/2016
+.EXAMPLE
+    Insert-TextIntoFile (New-ForStatement Bees -top -bot ) .\New-Module.ps1 289 
+#>
+	[CmdletBinding()]
+	Param(
+		[Parameter(Position=1)]
+		$InsertText,
+		[Parameter(Position=2)]
+		[string]$FileName = "New-Module.ps1",
+		[Parameter(Position=3)]
+		[ValidateRange(3,65535)]
+		[int]$InsertAtLineNumber = 3,
+		[array]$Filecontents = (gc $FileName),
+		[array]$filesplit = ($Filecontents[0].split(" ") | select -Unique),
+		[string]$Copyright = ($filesplit[5] + " " + $filesplit[6] + " " + $filesplit[7] + " " + $filesplit[8] + " " + $filesplit[9]),
+		[array]$FileOutput = $Filecontents[0.. ($InsertAtLineNumber -1)],
+		[int]$build = $filesplit[3],
+		[string]$dtstamp = (get-date -f s)
+	) #end Param
+	
+	#Finish adding text to FileOutput
+	if ($InsertText) {
+		$build += 1
+		Write-Host -f green "$FileName build incremented to $build."
+
+		#3. Rewrite top line.
+		$FileOutput[0] = "# $FileName Build: $build $dtstamp $Copyright"
+		
+		#Move changes up
+		$FileOutput[3] = $FileOutput[4]
+		$FileOutput[4] = $FileOutput[5]
+		$FileOutput[5] = $FileOutput[6]
+		$FileOutput[6] = $FileOutput[7]
+		
+		$FileOutput[7] = "# $build : $InsertAtLineNumber : $($inserttext -replace('\s',' '))"
+		$FileOutput += $InsertText 
+
+		
+		#Add build number with comment being last line inserted. (FLAG)
+	}; #end if InsertText
+	
+	$FileOutput += $Filecontents[($InsertAtLineNumber) ..($Filecontents.length)] 
+	#Write to file
+	[IO.File]::WriteAllLines((Resolve-Path $FileName), $FileOutput) 
+	
+	#Every time it writes a file, first push a backup. 
+	if ($InsertText) {
+		Backup-Module $FileName
+	}; #end if InsertText
+	#Sleep 1
+	#Import-Module $FileName -Force
+}; #end Insert-TextIntoFile
+if ((Get-Alias instxt -ErrorAction SilentlyContinue) -eq $null) {
+	New-Alias -Name instxt -Value Insert-TextIntoFile
+}; #end if Get-Alias
+
+	#$rnf = New-FunctionStatement ScriptBlock -else -scr 'Insert-TextIntoFile (New-FunctionStatement $OperationType $VariableName ) $FileName $InsertAtLineNo' -elses 'Insert-TextIntoFile (New-FunctionStatement $OperationType $VariableName -scr $ScriptBlock) $FileName $InsertAtLineNo'
+	#insop if string operationtype "'test'" Insert-OperationIntoFunction 304
+
+	#Need dynamic params: 
+	#If-Else - Else scriptblock
+	#Foreach - Operator and ComparisonOperator
+	#For - Operator and more options (main function too)
+	#Params - Mandatory, position, validateset, etc.
+	#Params - DynamicParam
+	#For
+	#Foreach
+	#Filter finder stuffs?
+	#Add in ALL the other types from nfs?
+	#Should merge inside this? <-- The fuck do I mean by this - merge what exactly?
+
+
+#This will make the thread with which you will thread the eye into NewModule.ps1.
+Function Insert-OperationIntoFunction {
+	Param(
+		[ValidateSet("If","For","Foreach")]
+		[string]$OperationType,
+		[ValidateSet("string","char","byte","int","long","bool","decimal","single","double","DateTime","xml","array","hashtable","object","switch")]
+		[string]$ParameterType,
+		[string]$VariableName = "NewVariable",
+		[array]$ScriptBlock,
+		[string]$FunctionName = "New-`Function",
+		[int]$InsertAtLineNo = ((Find-Function $FunctionName)[-1] - 2)
+	) #end Param
+	$FoundFunction = (Find-Function $FunctionName)
+	[string]$Filename = $FoundFunction[0]
+	[array]$Parameters = (Get-ParametersFromFunction $FunctionName)
+	#If no ParameterType, leave that section blank.
+
+	if ($Parameters -notcontains $VariableName) {
+		if (($ParameterType)) {
+			$ParameterBlock = New-Parameter $VariableName $ParameterType -top -bot
+			$ParameterLine = ((Find-Function -ParameterFind $FunctionName)[-1] - 1)
+			if (($ParameterLine -gt $FoundFunction[1]) -AND ($ParameterLine -lt $FoundFunction[-1])) { 
+					Insert-TextIntoFile $ParameterBlock $FileName $ParameterLine
+			} else {
+				Write-Host -f red "Error: ParameterLine $ParameterLine was outside function $FunctionName's top line $($FoundFunction[1]) and bottom line $($FoundFunction[-1]).`nThe `#end `Param section may be missing."	
+			}; #end if InsertAtLineNo
+		}; #end if ParameterType
+	} else {
+	Write-Host -f y "Parameter $VariableName already exists, skipping."	
+	}; #end if Parameters
+	
+		if ($OperationType) {
+			if ($ScriptBlock) {
+				$TextBlock = New-FunctionStatement $OperationType $VariableName -ScriptBlock $ScriptBlock
+			} else {
+				$TextBlock = New-FunctionStatement $OperationType $VariableName
+			}; #end if ScriptBlock
+		
+			if (($InsertAtLineNo -gt $FoundFunction[1]) -AND ($InsertAtLineNo -lt $FoundFunction[-1])) { 
+				Insert-TextIntoFile $TextBlock $FileName $InsertAtLineNo
+				#If no OperationType, leave that section blank.
+			} else {
+				Write-Host -f y "InsertAtLineNo $InsertAtLineNo was outside function $FunctionName's top line $($FoundFunction[1]) and bottom line $($FoundFunction[-1])"	
+			}; #end if InsertAtLineNo
+		}; #end if OperationType
+	
+}; #end Insert-OperationIntoFunction
+if ((Get-Alias insop -ErrorAction SilentlyContinue) -eq $null) {
+	New-Alias -Name insop -Value Insert-OperationIntoFunction
+}; #end if Get-Alias
+	
+	
+	
+#$rc = New-Object System.Object | select "dog","frog","log"
+#$rc.dog=2
+
+
+Function Backup-Module {
+	[CmdletBinding()]
+	Param(
+		[Parameter(Position=1)]
+		[string]$ModuleName = $PowerGIL,
+		[Parameter(Position=2)]
+		[string]$FilePath = (resolve-path $ModuleName),
+		[int]$build = ([int](gc $ModuleName)[0].split(" ")[3])
+		#$Content = (Get-ModuleVersion $FileName -Content)
+	) #end Param
+	$BuildPath = "$(split-path $FilePath)\builds"
+	#nfs if '(test-path $buildpath)' -ScriptBlock 'md $buildpath' -not -tab 1
+	if (!((test-path $buildpath))) {
+		md $buildpath
+	}; #end if (test-path $buildpath)
+	Copy-Item $FilePath ($BuildPath + "\" + ($FilePath.split("`\")[-1]) + "." + $build)
+	Write-Verbose "$ModuleName backed up." 
+}; #end Backup-Module
+
+
+Function Restore-Module {
+	Param(
+		[Parameter(Position=1)]
+		[string]$ModuleName,
+		[Parameter(Position=2)]
+		[int]$build = (Get-ModuleVersion $ModuleName).split(" ")[1],
+		[int]$RestoreVersion = ($build - 1),
+		[string]$FilePath =(resolve-path $ModuleName),
+		[string]$BuildPath = "$(split-path $FilePath)\builds"
+	) #end Param
+	Copy-Item "$BuildPath\$ModuleName.$RestoreVersion" $ModuleName
+	Write-Host -f green "$ModuleName restored from backup." 
+} #Restore-Module
+
+
+#endregion 
+
+#region ModuleBuilding
+#New-Module
+#Compare-Module
+#Compare-DevBuilds
+#Get-DevFlags
+
+Function Get-CommandsFromFunction {
+#Get-CommandsFromFunction to reverse a Function back out into Get-Function and Get-Params etc.
+	Param(
+		[string]$FunctionName = "Get-CommandsFromFunction",
+		[array]$Function = (Find-Function $FunctionName),
+		[array]$Prams = (Find-Function -ParameterFind $FunctionName)
+	) #end Param
+	#if ($Prams) {
+		#$Porameters += "Code to foreach params goes here" 
+		#Everything between the Param windows, split on ] and =
+		#($Function | where {$_ -like '*Param`(*'})
+	#} #end if Prams
+	
+	$Porameters = $Prams[1..($Prams.length -2)] 
+	#	| foreach {if ($_.gettype().name -eq "string") {$_.split(","" .`(`)`[`]_") | where { $_ -like "`$*"} | where { $_.length -gt 1} } } | select -Unique | sort
+	
+	$Porams = $Porameters | foreach {if ($_.gettype().name -eq "string") {$_.split(","" .`(`)`[`]_") | where { $_ -like "`$*"} | where { $_.length -gt 1} } } | select -Unique | sort
+	#Gets all strings from the selection. Need to do for all vars.
+	$VarStrings = $Function | foreach {
+		if ($_.gettype().name -eq "string") {
+				$_.split(","" .`(`)`[`]_") | where { 
+					$_ -like "`$*"
+				} | where { 
+				$_.length -gt 1
+			} 
+		} 
+	} | select -Unique | sort
+	#$Strings = $Function.split(", `)`[`]") | where { $_ -like "`$*"} | select -Unique 
+	
+	#$Porams
+	"Parameters: $Porams" 
+	#$VarStrings
+	"VarStrings: $VarStrings" 
+	
+}; #end Get-CommandsFromFunction
+
+
+Function Get-ParametersFromFunction {
+	Param(
+		[string]$FunctionName = "Find-Function",
+		[switch]$GilFile,
+		[array]$ParameterSection = (Find-Function -ParameterFind $FunctionName)
+	) #end Param
+	#Todo: Preserve types and defualts, so they can be reassembled.
+		
+	#On each line, 
+	$Porams = foreach ($Paramr in $ParameterSection) { 
+	#if it's a string, 
+		if ($Paramr.gettype().name -eq "string") { 
+			#split on, like, everything.
+			$Paramr.split(","" .`(`)`[`]_") | where { 
+				#filter variables by dollarsign, back into the pipeline...
+				$_ -like "`$*"
+			} | where { 
+			#longer than 1, 
+				$_.length -gt 1
+			}
+		}
+	}; #end foreach $Paramr
+	
+	
+	#Take that list, join it back into a string, split on dollarsigns and spaces.
+	$Poramers = ((-join $Porams).split("$ ") | where {
+		#Where the string is longer than 0. I forgot what this is for, but think this is a final garbage filter, to catch "this" and similar variable names.
+		$_.length -gt 0
+	}); #Poramers = all this
+
+	#Poramers is the final list
+	return $Poramers
+}; #end Get-ParametersFromFunction
+
+
+Function Rebuild-Parameters {
+	Param(
+		[array]$Poramers = (Get-ParametersFromFunction)
+	) #end Param
+	
+	#Poramers is the final list. Go thru ParameterSection to match param names with Poramers to catch types and defaults, and other settings.
+	
+	#If GilFile, return the commands in GilFile format.
+	if ($GilFile) {
+		foreach ($Pram in $Poramers) {
+			if ($Pram -match $Poramers[0]) {
+				"Insert-TextIntoFile (New-Parameter $Pram -bot) $FileName "
+			} elseif ($Pram -match $Poramers[($Poramers.length - 1)]) {
+				"New-Parameter $Pram -top"
+			} else {
+				"New-Parameter $Pram -top -bot"
+			}; #end if Pram
+		}; #end Foreach Pram
+	} else {
+	#If not GilFile, return the actual param section.
+	#Take the final list and reassemble the params.
+	foreach ($Pram in $Poramers) {
+		if ($Pram -match $Poramers[0]) {
+			New-Parameter $Pram -bot
+		} elseif ($Pram -match $Poramers[($Poramers.length - 1)]) {
+			New-Parameter $Pram -top
+		} else {
+			New-Parameter $Pram -top -bot
+		}; #end if Pram
+	}; #end foreach Pram
+	}; #end if 
+	
+}; #end Rebuild-Parameters
+
+
+#New-Module doesn't work, need to fix.
+#New-Module shoud make PSD1 and PSM1? -Module Flag?
+#New-Module adds the module to your Profile for auto-loading!
+#Have New-Module have a restart feature to restart your Powershell - to trigger the auto-loading!
+#New-Module takes a filename as the first param then every subsequent param is a function added to the scriptblock?
+#Auto-update on startup when module is 100+ out of date. 
+
+Function New-Module {
+#Have it take a line number as input (FLAG)
+	Param(
+		[string]$FileName = "New-Module.ps1",
+		[string]$Copyright =" Copyright Gilgamech Technologies", #Default to GT ;)
+		[int]$build = 0,
+		[string]$UpdatePath = "http://Gilgamech.com/PS1/PowerGIL.ps1",
+		[string]$dtstamp = (get-date -f s),
+		[string]$filecontents = "# $FileName Build: $build $dtstamp $Copyright
+# Update Path: $UpdatePath
+# Build : LineNo : Update Notes
+# 
+# 
+# 
+# 
+# 0 : 0 : # $FileName Build: $build $dtstamp $Copyright # Update Path: $UpdatePath # Build : LineNo : Update Notes
+",
+		[int]$LineNumber = 3
+	) #end Param
+	
+	Insert-TextIntoFile -InsertAtLineNumber $LineNumber -FileName $FileName -InsertText (New-Function)
+	
+	Write-Host -f green "$FileName build $build created."
+	
+	#Copy to builds folder with build number appended as extension.
+	#Replace with Out-DevBuild (FLAG)
+	if (!(test-path .\builds)) {md .\Builds}
+	copy $FileName .\builds\$FileName.$build
+
+}; #end New-Module
+
+#Catch -1 in Find-Function so it doesn't race to the top. Have it break for now 
+#nf2 Insert-AliasToFile
+
+if ((Get-Alias nf2 -ErrorAction SilentlyContinue) -eq $null) {
+	New-Alias -name nf2 -value New-Function2 -Force
+} #end if Get-Alias nf2 
+Function New-Function2 {
+<#
+.SYNOPSIS
+    Writes a new Function to a file.
+.DESCRIPTION
+    Author   : Gilgamech
+    Last edit: 5/8/2016
+.EXAMPLE
+    New-Function .\PowerShiriAdmin.ps1 289 -nos
+#>
+	Param(
+		[Parameter(Position=0)]
+		[string]$FunctionName = "New-Function",
+		[Parameter(Position=1)]
+		[array]$ScriptBlock,
+		[switch]$Filter,
+		[switch]$Header
+	) #end Param
+	[string]$FunctionContents = ""
+	[string]$TabVar = ("`t") #* ($TabLevel)
+	[string]$NewLineVar = "`n"
+#region fold this damn thing.
+	$FunctionHeader = @"
+<#
+.SYNOPSIS
+    Inserts the supplied text into the target module at the listed line number.
+.DESCRIPTION
+    Author   : Gilgamech
+    Last edit: 5/9/2016
+.PARAMETER Frequency
+    Required.
+    VMWare Performance Graph from which the CPU Ready value was taken.
+.PARAMETER CPUReadyValue
+    Required.
+    CPU Ready value from the VMWare Performance Graph. 
+.EXAMPLE
+    New-FunctionStatement .\PowerShiriAdmin.ps1 289 -nos
+.INPUTS
+    [string]
+    [int]
+    [switch]
+.OUTPUTS
+    [string]
+[int]
+.LINK
+	https://kb.vmware.com/selfservice/microsites/search.do?language=en_US&cmd=displayKC&externalId=2002181
+#>
+"@
+#endregion
+	
+	if ($Header) {
+		$FunctionContents += $FunctionHeader + $NewLineVar
+	}; #end if 
+
+	#insop if switch Filter` New-Function2 555 '$FunctionContents += "Filter $FunctionName {" + $NewLineVar' '$FunctionContents += "Function $FunctionName {" + $NewLineVar'
+	#instxt (nfs -top -else '$FunctionContents += "Function $FunctionName {" + $NewLineVar' -bot) $PowerGIL 557
+ 
+	if ($Filter) {
+		$FunctionContents += "Filter $FunctionName {" + $NewLineVar
+	} else {
+		$FunctionContents += "Function $FunctionName {" + $NewLineVar
+	}; #end if Filter
+	#$Functioncontents2 = Find-Function -FunctionName $FunctionName		
+if ($scriptblock) {
+	 
+}; #end if scriptblock
+	#$FunctionContents += "Function $FunctionName {" + $NewLineVar
+	$FunctionContents += $TabVar + "" + $NewLineVar
+	foreach ($ScriptBloc in $ScriptBlock.split("`n")) {
+		$FunctionContents += $TabVar + $ScriptBloc + $NewLineVar
+	}; #end foreach ScriptBlock
+	#$FunctionContents += $TabVar + $ScriptBlock + $NewLineVar
+	$FunctionContents += $TabVar + "" + $NewLineVar
+	$FunctionContents += $NewLineVar
+	$FunctionContents += "}; #end $FunctionName"
+	
+	#Insert-TextIntoFile -InsertAtLineNumber $LineNumber -FileName $FileName -InsertText $FunctionContents
+	return $FunctionContents
+}; #end New-Function2
+
+
+Function New-Parameter {
+	Param(
+		[Parameter(Position=1)]
+		[array]$ParameterName = "Variable1",
+		[Parameter(Position=2)]
+		[ValidateSet("string","char","byte","int","long","bool","decimal","single","double","DateTime","xml","array","hashtable","object","switch")]
+		[string]$ParameterType,
+		[Parameter(Position=3)]
+		[int]$PositionValue,
+		[array]$ValidateSetList,
+		[switch]$SetMandatory,
+		[string]$DefaultValue, # = 'DefaultValue',
+		[string]$SetValueFromPipelineByPropertyName,
+		[switch]$SetValueFromPipeline,
+		[switch]$OneLiner,
+		[switch]$CmdletBind,
+		[switch]$TopHeaderRemoved,
+		[switch]$BottomHeaderRemoved,
+		[switch]$Clipboard,
+		[switch]$NoComma
+	) #end Param
+	$CommaVar = ","
+	
+	if (!($OneLiner)) {
+		$NewLineVar = "`r`n"
+		$TabVar = "`t"
+	}; #end if OneLiner
+	
+	if (!($TopHeaderRemoved)) {
+	
+		if ($CmdletBind) {
+			$NewParameterOutstring += $TabVar + "[CmdletBinding()]" + $NewLineVar;
+		}; #end if OneLiner
+	
+		$NewParameterOutstring += $TabVar + "Param(" + $NewLineVar
+		
+		
+		if ($PositionValue) {
+			$PositionValue = 1
+		}; #end if $PositionValue
+		
+	} else {
+		$NewParameterOutstring += ""
+	}; #end if TopHeader
+	
+	
+	
+	foreach ($ParameterNam in $ParameterName) {
+
+		if (($SetMandatory) -OR ($PositionValue) -OR ($SetValueFromPipeline) -OR ($SetValueFromPipelineByPropertyName)  ) {
+			$NewParameterOutstring += $TabVar + $TabVar + "[Parameter("
+		}; #end if ($SetMandatory) -OR ($PositionValue) -OR ($SetValueFromPipeline) -OR ($SetValueFromPipelineByPropertyName)
+			
+		if ($SetMandatory) {
+			$NewParameterOutstring += "Mandatory=`$$SetMandatory" 
+			if (($PositionValue) -OR ($SetValueFromPipeline) -OR ($SetValueFromPipelineByPropertyName)  ) {
+				$NewParameterOutstring += $CommaVar
+			}; #end if (($PositionValue) -OR ($SetValueFromPipeline) -OR ($SetValueFromPipelineByPropertyName)
+			}; #end if $SetMandatory
+
+		if ($PositionValue) {
+			$NewParameterOutstring += "Position=$PositionValue" 
+			$PositionValue++
+			if (($SetMandatory) -OR ($SetValueFromPipeline) -OR ($SetValueFromPipelineByPropertyName)  ) {
+				$NewParameterOutstring += $CommaVar
+			}; #end if ($SetMandatory) -OR ($SetValueFromPipeline) -OR ($SetValueFromPipelineByPropertyName)
+		}; #end if $PositionValue
+
+		if ($SetValueFromPipeline) {
+			$NewParameterOutstring += "ValueFromPipeline=`$$SetValueFromPipeline" 
+			if (($SetMandatory) -OR ($PositionValue) -OR ($SetValueFromPipelineByPropertyName)  ) {
+				$NewParameterOutstring += $CommaVar
+			}; #end if ($SetMandatory) -OR ($PositionValue) -OR ($SetValueFromPipelineByPropertyName)
+		}; #end if $SetValueFromPipeline
+
+		if ($SetValueFromPipelineByPropertyName) {
+			$NewParameterOutstring += "ValueFromPipelineByPropertyName=$SetValueFromPipelineByPropertyName" 
+			if (($SetMandatory) -OR ($PositionValue) -OR ($SetValueFromPipeline)) {
+				$NewParameterOutstring += $CommaVar
+			}; #end if ($SetMandatory) -OR ($PositionValue) -OR ($SetValueFromPipeline)
+		}; #end if $SetValueFromPipelineByPropertyName
+
+		if ($($SetMandatory) -OR ($PositionValue) -OR ($SetValueFromPipeline) -OR ($SetValueFromPipelineByPropertyName)  ) {
+			$NewParameterOutstring += ")]" + $NewLineVar
+		}; #end if ($SetMandatory) -OR ($PositionValue) -OR ($SetValueFromPipeline) -OR ($SetValueFromPipelineByPropertyName)
+
+		if ($ValidateSetList) {
+			$NewParameterOutstring += $TabVar + $TabVar + "[ValidateSet($ValidateSetList)]" + $NewLineVar
+		}; #end if ValidateSetList
+
+		$NewParameterOutstring += $TabVar + $TabVar 
+
+		if ($ParameterType) {
+			$NewParameterOutstring += "[$ParameterType]"
+		}; #end if $ParameterType
+
+		$NewParameterOutstring += "`$$ParameterNam" 
+
+		if ($DefaultValue) {
+			$NewParameterOutstring += " = ""$DefaultValue"""
+		}; #end if DefaultValue
+		
+		if ($ParameterName[-1] -notmatch $ParameterNam) {
+			$NewParameterOutstring += $CommaVar + $NewLinevar
+		}; #end if ParameterName[-1]
+		
+		
+	}; #end foreach ParameterName
+		
+	if (!($BottomHeaderRemoved)) {
+		$NewParameterOutstring += $NewLineVar + $TabVar +") #end `Param"
+	} else {
+		#The only way to get a trailing comma is if BottomHeaderRemoved and not NoComma
+		if (!($NoComma)) {
+			$NewParameterOutstring += $CommaVar
+		}; #end if NoComma
+		
+	}; #end if BottomHeader
+	
+	if ($Clipboard) {
+		$NewParameterOutstring | clip
+	} else {
+		return $NewParameterOutstring
+	}; #end if Clipboard
+}; #end New-Parameter
+
+
+# New-FunctionStatement - Make all these TopHeaderRemoved options into dynamic params.
+
+# TryCatchElse - swap out parens for brackets like in Where, then add in a 3rd set for Catch before Else...somehow.
+#nfs/insop/instxt Verbose option adds 'Write-Verbose "$Variable1 $Variable2 $Variable3 $VariableEtc"' or 'Write-Verbose "You are in IF statement RefVar CompOp CompVar on line LineNo"'
+
+Function New-FunctionStatement {
+<#
+.SYNOPSIS
+    Returns a new function statement. Like an If-Else or a Foreach.
+.DESCRIPTION
+    Author   : Gilgamech
+    Last edit: 5/25/2016
+.EXAMPLE
+    New-FunctionStatement
+#>
+	Param(
+		[ValidateSet("If","For","Foreach","Where","While","Try","Switch","ElseIf")]
+		[string]$OperatorVar = 'if',
+		[string]$FunctionVariable = "FunctionVariable",
+		[ValidateSet("Equal","NotEqual","GreaterThanOrEqual","GreaterThan","LessThan","LessThanOrEqual","Like","NotLike","Match","NotMatch","Contains","NotContains","Or","And","Not","In","NotIn","Is","IsNot","As","BinaryAnd","BinaryOr","Modulus")]
+		[string]$ComparisonOperator, 
+		[string]$ReferenceVariable,
+		[array]$ScriptBlock,
+		[string]$ElseScriptBlock, #only works with if.
+		[ValidateRange(0,9)]
+		[int]$TabLevel,
+		[int]$StartValue = 1, #only works with For.
+		[switch]$OneLiner,
+		[switch]$TopHeaderRemoved,
+		[switch]$BottomHeaderRemoved,
+		[switch]$Clipboard,
+		[switch]$Not, #only works with if.
+		[switch]$ForDecriment, #only works with For.
+		[switch]$Pipeline,
+		[switch]$SetVerbose,
+		[switch]$NoComma
+	) #end Param
+	#Needs -Not flag
+	#Needs -ElseIf flag and vars
+	
+	$PossibleOperators = @{
+		"Equal" = "-eq"
+		"NotEqual" = "-ne"
+		"GreaterThanOrEqual" = "-ge"
+		"GreaterThan" = "-gt"
+		"LessThan" = "-lt"
+		"LessThanOrEqual" = "-le"
+		"Like" = "-like"
+		"NotLike" = "-notlike"
+		"Match" = "-match"
+		"NotMatch" = "-notmatch"
+		"Contains" = "-contains"
+		"NotContains" = "-notcontains"
+		"Or" = "-or"
+		"And" = "-and"
+		"Not" = "-not"
+		"In" = "-in"
+		"NotIn" = "-notin"
+		"Is" = "-is"
+		"IsNot" = "-isnot"
+		"As" = "-as"
+		"BinaryAnd" = "-band"
+		"BinaryOr" = "-bor"
+		"Modulus" = "%"
+	} #end list of comparison operators
+	#First things first, convert the ComparisonOperator into its output value.
+	$CompOp = $PossibleOperators[$ComparisonOperator]
+	
+	if (!($ScriptBlock)) {
+		$SB = $True
+	}; #end if ScriptBlock
+		
+	if (($Not)) {
+		$NotHeader =  $Spacevar + ' not'
+		[string]$OpeningParenthesisVar = "(!("; 
+		[string]$ClosingParenthesisVar = "))";
+	} else {
+		[string]$OpeningParenthesisVar = "("; 
+		[string]$ClosingParenthesisVar = ")";
+	}; #end if Not
+			
+	switch ($OperatorVar)  { 
+		"If" {
+			if ($CompOp) {
+				#Even if we're in an IF, if there's a CompOp set, and no RefVar, set a RefVar.
+				if (!($ReferenceVariable)) {
+					$ReferenceVariable = $($FunctionVariable.substring(0,(($FunctionVariable.Length)-1)))
+				}; #end if ReferenceVariable
+
+			}; #end if CompOp
+		
+			#Swap these 2 for simplicity.
+			$RV = $ReferenceVariable
+			$ReferenceVariable = $FunctionVariable
+			$FunctionVariable = $RV
+			
+			if ($SB) {
+				$SBHeader = 'The variable' +  $Spacevar
+				$NumHeader = 'is'
+			}; #end if SB
+			
+			
+		}; #end switch If
+		"Foreach" {
+				$CompOp = 'in'
+				#Even if we're in an IF, if there's a CompOp set, and no RefVar, set a RefVar.
+			if (!($ReferenceVariable)) {
+				$ReferenceVariable = $($FunctionVariable.substring(0,(($FunctionVariable.Length)-1)))
+			}; #end if ReferenceVariable
+
+			if ($SB) {
+				$SBHeader = 'This is' +  $Spacevar
+			}; #end if SB
+			
+			#We'll always need a RefVar, unless we're in an IF and one's not set.
+			if (!($ReferenceVariable)) {
+				$ReferenceVariable = $($FunctionVariable.substring(0,(($FunctionVariable.Length)-1)))
+			}; #end if ReferenceVariable
+		}; #end switch Foreach
+		"For" {
+			if (!($ReferenceVariable)) {
+				$ReferenceVariable = $($FunctionVariable.substring(0,(($FunctionVariable.Length)-1)))
+			}; #end if ReferenceVariable
+			if (!($CompOp)) {
+				#Even if we're in an IF, if there's a CompOp set, and no RefVar, set a RefVar.
+				$CompOp = '-le'
+			}; #end if CompOp
+
+			if ($SB) {
+				$NumHeader = 'number' +  $Spacevar
+				#$ScriptBlock = ('Write-Host -f y "' + $ReferenceVariable.substring(0,1).toupper() + $ReferenceVariable.substring(1) + ' number $' + $ReferenceVariable + '"');
+			}; #end if SB
+			if (!($ReferenceVariable)) {
+				$ReferenceVariable = $($FunctionVariable.substring(0,(($FunctionVariable.Length)-1)))
+			}; #end if ReferenceVariable
+			
+		}; #end switch For
+		"Where" {
+			#Need to change this one up - put brackets where parentheses are, and then no brackets below.
+			[string]$OpeningParenthesisVar = '{'; 
+			[string]$ClosingParenthesisVar = '}';
+
+			
+			#Swap these 2 for simplicity.
+			$RV = $ReferenceVariable
+			$ReferenceVariable = $FunctionVariable
+			$FunctionVariable = $RV
+			
+		}; #end switch Where
+		"While" {
+			#Swap these 2 for simplicity.
+			$RV = $ReferenceVariable
+			$ReferenceVariable = $FunctionVariable
+			$FunctionVariable = $RV
+			
+		}; #end switch While
+		"Try"  {
+			#Swap these 2 for simplicity.
+			$RV = $ReferenceVariable
+			$ReferenceVariable = $FunctionVariable
+			$FunctionVariable = $RV
+			
+		}; #end switch Try
+		"Switch" {
+			#Swap these 2 for simplicity.
+			$RV = $ReferenceVariable
+			$ReferenceVariable = $FunctionVariable
+			$FunctionVariable = $RV
+			
+		}; #end switch Switch
+		"Elseif" {
+			$BottomHeaderRemoved = $True
+			if ($CompOp) {
+				#Even if we're in an IF, if there's a CompOp set, and no RefVar, set a RefVar.
+				if (!($ReferenceVariable)) {
+					$ReferenceVariable = $($FunctionVariable.substring(0,(($FunctionVariable.Length)-1)))
+				}; #end if ReferenceVariable
+
+			}; #end if CompOp
+		
+			#Swap these 2 for simplicity.
+			$RV = $ReferenceVariable
+			$ReferenceVariable = $FunctionVariable
+			$FunctionVariable = $RV
+			
+			if ($SB) {
+				$SBHeader = 'The variable' +  $Spacevar
+				$NumHeader = 'is'
+			}; #end if SB
+			
+						
+		}; #end switch Elseif
+		default {
+			write-verbose $OperatorVar 
+		}; #end switch default
+	}; #end switch OperatorVar		
+
+	[string]$VariableOperator = '$';
+	[string]$Spacevar = " ";
+	[string]$OpeningBracket = '{'
+	[string]$ClosingBracket = '}'
+	
+	if ($OneLiner) {
+		[string]$ClosingBracketOneLiner = '}'
+	} else {
+		[string]$SingleTabVar = "`t"
+		[string]$TabVar = $SingleTabVar  * ($TabLevel)
+		#[string]$NewLineVar = "`r`n"
+		[string]$NewLineVar = "`n"
+		[string]$ClosingBracketOneLiner = '}; #end' + $Spacevar + $OperatorVar + $Spacevar + $ReferenceVariable
+	}; #end if OneLiner
+		
+	If ($ForDecriment) {
+		$ForIncVar = "--"		
+	} else {
+		$ForIncVar = "++"
+	}; #end if ForDecriment
+	
+	#We'll always need a RefVar, unless we're in an IF and one's not set.
+	if ((!($ReferenceVariable))  -AND (!($OperatorVar -eq "If"))) {
+		$ReferenceVariable = $($FunctionVariable.substring(0,(($FunctionVariable.Length)-1)))
+	}; #end if ReferenceVariable
+	
+
+	if ($CompOp) {
+		#Even if we're in an IF, if there's a CompOp set, and no RefVar, set a RefVar.
+		if (!($ReferenceVariable)) {
+			$ReferenceVariable = $($FunctionVariable.substring(0,(($FunctionVariable.Length)-1)))
+		}; #end if ReferenceVariable
+
+		#Gotta move this below.
+		#$ScriptBlock = $ScriptBlock.replace("The variable $FunctionVariable is True","The variable $FunctionVariable is '$ComparisonOperator' to the variable $ReferenceVariable");
+		[string]$SpacevarCORV = " "
+		[string]$VariableOperatorRV = '$';
+	} else {
+		If (!($OperatorVar -eq "IF")) {
+			$CompOp = '-le'
+		}; #end If 
+	}; #end if CompOp
+
+	
+	if ($FunctionVariable.ToCharArray()[0] -match '[a-zA-Z_]') {
+		$FunctionVariableWOper = $VariableOperator + $FunctionVariable
+		$FunctionVariableWOperRV = $VariableOperatorRV + $FunctionVariable
+	} else {
+		$FunctionVariableWOper = $FunctionVariable
+		$FunctionVariableWOperRV = $FunctionVariable
+	}; #end if string
+				
+	if ($ReferenceVariable.ToCharArray()[0] -match '[a-zA-Z_]') {
+		$ReferenceVariableWOper = $VariableOperator + $ReferenceVariable
+		$ReferenceVariableWOperRV = $VariableOperatorRV + $ReferenceVariable
+	} else {
+		$ReferenceVariableWOper = $ReferenceVariable
+		$ReferenceVariableWOperRV = $ReferenceVariable
+	}; #end if string
+
+	if (!($TopHeaderRemoved)) {
+			
+			[string]$NewFunctionOperation = $TabVar + $OperatorVar + $Spacevar + $OpeningParenthesisVar + $ReferenceVariableWOper
+			
+			switch ($OperatorVar)  { 
+				"If" {
+						$NewFunctionOperation += $SpacevarCORV + $CompOp + $SpacevarCORV + $FunctionVariableWOperRV;
+				}; #end switch If
+				"Foreach" {
+					$CompOp = 'in'
+					$NewFunctionOperation += $Spacevar + $CompOp + $Spacevar + $FunctionVariableWOper;
+					
+				}; #end switch Foreach
+				"For" {
+					$NewFunctionOperation += $Spacevar + '='  + $Spacevar + $StartValue + $Spacevar + ';' + $Spacevar + $ReferenceVariableWOper + $Spacevar + $CompOp + $Spacevar + $FunctionVariableWOper + $Spacevar + ';' + $Spacevar + $ReferenceVariableWOper + $ForIncVar;
+					
+				}; #end switch For
+				"Where" {
+						#Need to change this one up - put brackets where parentheses are, and then no brackets below.
+						$ClosingBracket = ""
+						$OpeningBracket = ""
+						$ClosingBracketOneLiner = ''
+						
+						#No script block!
+						$SB = $False
+						$ScriptBlock = $null
+						
+						$NewFunctionOperation += $SpacevarCORV + $CompOp + $SpacevarCORV + $FunctionVariableWOperRV;
+				}; #end switch Where
+				"While" {
+						$NewFunctionOperation += $SpacevarCORV + $CompOp + $SpacevarCORV + $FunctionVariableWOperRV;
+				}; #end switch While
+				"Try"  {
+						$NewFunctionOperation += $SpacevarCORV + $CompOp + $SpacevarCORV + $FunctionVariableWOperRV;
+					#Else = Catch? 
+				}; #end switch Try
+				"Switch" {
+					$NewFunctionOperation += ""
+				}; #end switch Switch
+				"Elseif" {
+					[string]$NewFunctionOperation = $OperatorVar + $Spacevar + $OpeningParenthesisVar + $ReferenceVariableWOper + $SpacevarCORV + $CompOp + $SpacevarCORV + $FunctionVariableWOperRV;
+				}; #end switch Elseif
+				default {
+					write-verbose $OperatorVar 
+				}; #end switch default
+			}; #end switch OperatorVar	
+
+			$NewFunctionOperation +=  $ClosingParenthesisVar + $Spacevar + $OpeningBracket + $NewLineVar
+
+			}; #end if TopHeader
+			
+	if ($SB) {
+		[string]$ScriptBlock = 'Write-Host -f green "' + $SBHeader + $Spacevar + $ReferenceVariable + $Spacevar + $NumHeader + $NotHeader + $Spacevar + $VariableOperator + '(' + $ReferenceVariableWOper + ')"';
+	}; #end if ScriptBlock
+
+	if ($SetVerbose) {
+		$VerboseVar =  $TabVar + $SingleTabVar + "Write-Verbose 'You are running Function Statement $OperatorVar $ReferenceVariable';"  + $NewLineVar;
+	}; #end if SetVerbose
+			
+	if ($ScriptBlock) {
+		 [string]$NewFunctionOperation += $VerboseVar
+		foreach ($ScriptBloc in $ScriptBlock.split("`n")) {
+			[string]$NewFunctionOperation += $TabVar + $SingleTabVar + $ScriptBloc + $NewLineVar;
+		}; #end foreach ScriptBlock
+	}; #end if ScriptBlock
+	
+	if ($ElseScriptBlock) {
+		#instxt (nfs if 'ElseScriptBlock.split("`n")[0]' Like '"ElseIf *"' -scr "[string]`$NewFunctionOperation += `$TabVar  + $ClosingBracket" -else "[string]`$NewFunctionOperation += `$TabVar +'} else {' + `$NewLineVar`;" -tab 2) $PowerGIL 1011
+		if ($ElseScriptBlock.split("`n")[0] -like "ElseIf *") {
+		 [string]$NewFunctionOperation += $VerboseVar
+			[string]$NewFunctionOperation += $TabVar + $ClosingBracket;
+			foreach ($ElseScriptBloc in $ElseScriptBlock.split("`n")) {
+			[string]$NewFunctionOperation += $Spacevar + $ElseScriptBloc + $NewLineVar;
+		}; #end foreach ElseScriptBlock
+	} else {
+			[string]$NewFunctionOperation += $TabVar + $ClosingBracket + $Spacevar + 'else'  + $Spacevar  + $OpeningBracket + $NewLineVar;
+		foreach ($ElseScriptBloc in $ElseScriptBlock.split("`n")) {
+			[string]$NewFunctionOperation += $TabVar + $SingleTabVar + $ElseScriptBloc + $NewLineVar;
+		}; #end foreach ElseScriptBlock
+		}; #end if ElseScriptBlock.split("`n")[0]
+		
+	}; #end if ElseScriptBlock
+	
+	if (!($BottomHeaderRemoved)) {
+		[string]$NewFunctionOperation += $TabVar + $ClosingBracketOneLiner
+	}; #end if BottomHeader
+	if ($Pipeline) {
+		#If Pipeline, prepend with PipelineVar
+		$PipelineVar = '| '
+		[string]$NewFunctionOperation = $PipelineVar + $NewFunctionOperation
+	}; #end if Pipeline
+
+	if ($Clipboard) {
+		$NewFunctionOperation | clip
+	} else {
+		return $NewFunctionOperation
+	}; #end if Clipboard
+	
+}; #end New-FunctionStatement
+if ((Get-Alias nfs -ErrorAction SilentlyContinue) -eq $null) {
+New-Alias -name nfs -value New-FunctionStatement -Force
+} #end if Get-Alias nfs
+
+
+#How to handle if string not found?
+#How to handle multiple mentions?
+#How to handle multiple functions?
+#if -1 break?
+Function Find-Function {
+	Param(
+		[Parameter(Position=0)]
+		[string]$FunctionName = "Find-Function",
+		[switch]$ParameterFind,
+		[switch]$NoLineNumbers,
+		[switch]$NoFileName,
+		[switch]$NoFunctionShow
+	) #end Param
+	
+	$FileName = foreach ($Module in (Get-Module).path) {
+		if ((gc $Module) -like "*$FunctionName*") {
+				$Module
+			}; #end if gc Module 
+	}; #end foreach Module
+	$FileContents = (gc $FileName)
+	
+	$StartLine = ((($FileContents | select-string "Function $FunctionName ").LineNumber) + (($FileContents | select-string "Filter $FunctionName ").LineNumber) - 1)
+	$EndLine = ((($FileContents | select-string "}; #end $FunctionName").LineNumber) - 1)
+	$NewFileContents = $FileContents[($StartLine)..($EndLine)]
+	
+	#Backup method.
+	#Read forward until you get the first bracket, and then add left brackets and subtract right brackets.
+	if (($EndLine -eq ($FileContents.Length - 1)) -OR ($EndLine -eq -1)) {
+		$StartReadLine = ((($NewFileContents| select-string "`{")[0].LineNumber))
+		$Counter = 1
+		While ($Counter -gt 0) {
+			Foreach ($Char in $NewFileContents[$StartReadLine..$EndLine].Tochararray()) {	
+				
+				switch ($Char) 
+					{ 
+						"`{" { $Counter++ ; write-verbose $Counter }
+						"`}" { $Counter-- ; write-verbose $Counter }
+						#3 {"The color is green."} 
+						default {write-verbose $Char }
+					}; #end switch Char
+			}; #end Foreach NewFileContents[$StartReadLine..$EndLine].Tochararray()
+		}; #end While Counter
+		#How to determine the line number?
+	}; #end if 
+<#
+#>
+	
+	if ($ParameterFind) {
+		$ParamStartLine = ((($NewFileContents | select-string "`tParam*").LineNumber) - 1)
+		$ParamEndLine = ((($NewFileContents | select-string "`#end `Param*").LineNumber) - 1)
+		$NewParameters = $NewFileContents[($ParamStartLine + 1)..($ParamEndLine - 1)]
+
+		if (!($NoFileName)) {
+			$FileName
+		}; #end if NoFileName
+		if	(!($NoLineNumbers)) {
+			($ParamStartLine + $StartLine)
+		}; #end if NoLineNumbers
+		if (!($NoFunctionShow)) {
+			$NewParameters
+		}; #end if NoFunctionShow
+		if	(!($NoLineNumbers)) {
+			($ParamEndLine + $StartLine)
+		}; #end if NoLineNumbers
+		
+	} else{ 
+		if (!($NoFileName)) {
+			$FileName
+		}; #end if NoFileName
+		if	(!($NoLineNumbers)) {
+			$StartLine
+		}; #end if NoLineNumbers
+		if (!($NoFunctionShow)) {
+			$NewFileContents
+		}; #end if NoFunctionShow
+		if	(!($NoLineNumbers)) {
+			$EndLine
+		}; #end if NoLineNumbers
+	}; #end if ParameterFind
+}; #end Find-Function
+
+
+Function Get-DevFlags {
+#Make this take a file/directory as input. (FLAG)
+foreach ($file in (ls -file)) {
+Write-Host $file ; 
+Write-Host "has changes:"; 
+gc $file | select-string "(FLAG)" 
+
+}; #end foreach
+}; #end Get-DevFlags
+
+
+Function Compare-DevBuilds { 
+Param(
+	[string]$FileName,
+	[int]$FirstBuild,
+	[int]$SecondBuild
+); #end Param
+diff (gc .\Builds\$FileName.$FirstBuild) (gc .\Builds\$FileName.$SecondBuild);
+}; #end Compare-DevBuilds
+
+#endregion 
+
+#region MiscSystemUtilities
+
+
+#Open here in Explorer.
+Function Open-Explorer {
+	Param(
+		[string]$Location
+	) #end Param
+	if ($Location){
+		explorer.exe $Location
+	} else {
+		explorer.exe (Get-Location)
+	}; #end if Location
+}; #end Open-Explorer
+
+
+Function New-Powershell {
+	Param(
+		[switch]$Elevated
+	) #end Param
+	if ($Elevated) {
+		start-process powershell -verb runas
+	} else {
+		Start-Process powershell 
+	}; #end if Elevated
+}; #end New-Powershell
+
+
+Function Restart-Powershell {
+	Param(
+		[switch]$Elevated
+	) #end Param
+	if ($Elevated) {
+		New-Powershell -Elevated
+	} else {
+		New-Powershell 
+	}; #end if Elevated
+	exit
+}; #end Restart-Powershell
+
+
+
+Function Get-PSVersion {
+	if ($PSVersionTable.psversion.major -ge 4) {
+		Write-Host "PowerShell Version: $($PSVersionTable.PSVersion.Major).$($PSVersionTable.PSVersion.Minor).$($PSVersionTable.PSVersion.Build).$($PSVersionTable.PSVersion.Revision)" -f Yellow 
+	} else {
+		Write-Host "PowerShell Version: $($PSVersionTable.PSVersion.Major).$($PSVersionTable.PSVersion.Minor)" -f Yellow 
+	}; #end if PSVersionTable
+}; #end Get-PSVersion
+
+
+Function Set-PSWindowSize {
+	[CmdletBinding()]
+	Param(
+	   [int]$Rows = 0,
+	   [int]$Columns = 0
+	)
+	#from http://www.powershellserver.com/support/articles/powershell-server-changing-terminal-width/
+	$pshost = Get-Host              # Get the PowerShell Host.
+	$pswindow = $pshost.UI.RawUI    # Get the PowerShell Host's UI.
+
+	$maxWindowSize = $pswindow.MaxPhysicalWindowSize # Get the max window size. 
+	$newBufferSize = $pswindow.BufferSize # Get the UI's current Buffer Size.
+	$newWindowSize = $pswindow.windowsize # Get the UI's current Window Size.
+
+	if ($Rows -gt $maxWindowSize.height) {
+		Write-Verbose "Max height $($maxWindowSize.height) rows tall."
+		$Rows = $maxWindowSize.height
+	}; #end if Rows -gt
+
+	if ($Columns -gt $maxWindowSize.width) {
+		Write-Verbose "Max width $($maxWindowSize.width) columns wide."
+		$Columns = $maxWindowSize.width
+	}; #end if Columns -gt
+
+	$oldBufferSize = $newBufferSize             # Save the oldsize.
+	$oldWindowSize = $newWindowSize
+
+	if ($Rows -gt 0 ) {
+		$newWindowSize.height = $Rows
+	} if ($oldWindowSize.height -eq $Rows) {
+		Write-Verbose "Window is already $($newWindowSize.height) rows tall."
+	} else {
+		$pswindow.windowsize = $newWindowSize # Set the new Window Size as active.
+	}; #end if Rows
+
+
+	if ($Columns -gt 0) {
+	$newWindowSize.width = $Columns # Set the new buffer's width to 150 columns.
+	$newBufferSize.width = $Columns
+
+	if ($newWindowSize.width -gt $oldWindowSize.width) {
+		$pswindow.buffersize = $newBufferSize # Set the new Buffer Size as active.
+		$pswindow.windowsize = $newWindowSize # Set the new Window Size as active.
+	} elseif ($oldWindowSize.width -gt $newWindowSize.width) { #Order is important, buffer must always be wider.
+		$pswindow.windowsize = $newWindowSize # Set the new Window Size as active.
+		$pswindow.buffersize = $newBufferSize # Set the new Buffer Size as active.
+	} elseif ($oldWindowSize.width -eq $newWindowSize.width) {
+		Write-Verbose "Window is already $($newWindowSize.width) columns wide."
+		}; #end if newWindowSize.width -gt
+	}; #end if WindowWidth
+}; #end Set-PSWindowSize
+if ((Get-Alias spsz -ErrorAction SilentlyContinue) -eq $null) {
+New-Alias -name spsz -value Set-PSWindowSize
+} #end if Get-Alias spsz
+
+
+Function Set-PSWindowStyle {
+param(
+    [Parameter()]
+    [ValidateSet('FORCEMINIMIZE', 'HIDE', 'MAXIMIZE', 'MINIMIZE', 'RESTORE',
+                 'SHOW', 'SHOWDEFAULT', 'SHOWMAXIMIZED', 'SHOWMINIMIZED',
+                 'SHOWMINNOACTIVE', 'SHOWNA', 'SHOWNOACTIVATE', 'SHOWNORMAL')]
+    $Style = 'MINIMIZE',
+
+    [Parameter()]
+    $MainWindowHandle = (Get-Process -id $pid).MainWindowHandle
+)
+    $WindowStates = @{
+        'FORCEMINIMIZE'   = 11
+        'HIDE'            = 0
+        'MAXIMIZE'        = 3
+        'MINIMIZE'        = 6
+        'RESTORE'         = 9
+        'SHOW'            = 5
+        'SHOWDEFAULT'     = 10
+        'SHOWMAXIMIZED'   = 3
+        'SHOWMINIMIZED'   = 2
+        'SHOWMINNOACTIVE' = 7
+        'SHOWNA'          = 8
+        'SHOWNOACTIVATE'  = 4
+        'SHOWNORMAL'      = 1
+    }
+
+$memberDefintion = @"
+    [DllImport("user32.dll")]
+    public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
+"@
+
+    $Win32ShowWindowAsync = Add-Type -memberDefinition $memberDefintion -name "Win32ShowWindowAsync" -namespace Win32Functions -passThru
+
+    $Win32ShowWindowAsync::ShowWindowAsync($MainWindowHandle, $WindowStates[$Style]) | Out-Null
+    Write-Verbose ("Set Window Style '{1} on '{0}'" -f $MainWindowHandle, $Style)
+
+}; #end Set-PSWindowStyle
+if ((Get-Alias spsy -ErrorAction SilentlyContinue) -eq $null) {
+New-Alias -name spsy -value Set-PSWindowStyle
+} #end if Get-Alias spsy
+
+
+#System WMI stuffs
+Function Invoke-WMIInstaller {
+Param(
+[String]$Uninstall
+)
+$IsElevated = (whoami /all | select-string S-1-16-12288) -ne $null
+
+#It takes a long time to run, so I'll just repeat myself down there. That way I can check if this is in admin without making the user wait for the list to load.
+Write-Host "This may take a minute or two..."
+if ($Uninstall) {
+if ($IsElevated) {
+$app = Get-WmiObject -Class Win32_Product
+$uninstallapp = $app | Where-Object { $_.Name -match $Uninstall }
+$uninstallapp.uninstall()
+} else {
+
+Write-Host -f red "Please run in Administrator Powershell"
+break
+}; #end if iselevated
+
+} else { #if not uninstall, display a list of stuff to uninstall.
+
+$app = Get-WmiObject -Class Win32_Product
+$app.name | sort
+Write-Host -f yellow "Please copy one of the items in the list above, and re-run with -Uninstall option."
+
+}; #end if uninstall
+}; #end Invoke-WMIInstaller
+
+
+Function Get-WMIDisk {
+	Param(
+		[String]$Drive,
+		[Switch]$Raw
+	) #end Param
+	if ($drive.length -eq 1) {
+		$Filter = ("DeviceID='" + $Drive + ":'")
+		$GWD = Get-WmiObject Win32_LogicalDisk -Filter $Filter
+	} else {
+		[object]$GWD = Get-WmiObject Win32_LogicalDisk
+	}; #end if Drive
+	if ($Raw) {
+		$GWD
+	} else {
+		foreach ($drive in $GWD) {
+			$drive = [object]$drive
+			$drive
+			$drive.DeviceID
+			$drive.size
+			if ($drive.size -gt 0) {
+				[math]::Round((($drive.FreeSpace / $drive.Size) * 100)).tostring() + "% free in drive" + $drive.DeviceID
+			}; #end if drivesize gt 0
+		}; #end foreach drive
+	}; #end if Raw
+}; #end Get-WMIDisk 
+
+
+Function Export-PuTTY {
+	Write-Host "Exports your PuTTY profiles to $home\Desktop\putty.reg"
+	reg export HKCU\Software\SimonTatham $home\Desktop\putty.reg
+}; #end Export-PuTTY
+
+
+#Github
+Function Get-GithubStatus {
+$r = Invoke-RestMethod -Uri "https://status.github.com/api/status.json?callback=apiStatus"
+$s = ConvertFrom-Json $r.substring(10,($r.Length - 11))
+$s.last_updated = get-date ($s.last_updated)
+$s
+}; #end Get-GithubStatus
+
+
+Function Leet-H4x0r {
+$leet = @'
+............................................________ 
+....................................,.-'"...................``~., 
+.............................,.-"..................................."-., 
+.........................,/...............................................":, 
+.....................,?......................................................, 
+.................../...........................................................,} 
+................./......................................................,:`^`..} 
+.............../...................................................,:"........./ 
+..............?.....__.........................................:`.........../ 
+............./__.(....."~-,_..............................,:`........../ 
+.........../(_...."~,_........"~,_....................,:`........_/ 
+..........{.._$;_......"=,_......."-,_.......,.-~-,},.~";/....} 
+...........((.....*~_......."=-._......";,,./`..../"............../ 
+...,,,___.`~,......"~.,....................`.....}............../ 
+............(....`=-,,.......`........................(......;_,,-" 
+............/.`~,......`-...................................../ 
+.............`~.*-,.....................................|,./.....,__ 
+,,_..........}.>-._...................................|..............`=~-, 
+.....`=~-,__......`,................................. 
+...................`=~-,,.,............................... 
+................................`:,,...........................`..............__ 
+.....................................`=-,...................,%`>--==`` 
+........................................_..........._,-%.......` 
+..................................., 
+'@
+$leet
+} #Leet-H4x0r
+
+
+Function Test-PingJob {
+start-job { 
+ping -t 8.8.8.8 
+} ; 
+$pingjob = (get-job).id[-1] ; 
+while ((get-job $pingjob ).hasmoredata) {
+receive-job $pingjob 
+}; #end while 
+}; #end Test-PingJob
+
+
+Function Stop-Explorer {
+get-process explorer | foreach { stop-process $_.id }
+}; #end Stop-Explorer
+
+
+Function Receive-AllJobs {
+foreach ($job in (get-job).id ) { 
+while ((get-job $job ).hasmoredata) { 
+receive-job $job
+}; #end while
+}; #end foreach
+}; #end Receive-AllJobs
+
+
+
+Function Stop-AllJobs {
+foreach ($job in (get-job).id ) {
+stop-job $job
+}; #end foreach
+}; #end Stop-AllJobs
+
+
+Function Get-Clipboard {
+#https://www.bgreco.net/powershell/get-clipboard/
+Param(
+    [switch]$JSON,
+	[switch]$raw
+) 
+	Add-Type -Assembly PresentationCore
+	if($raw) {
+		$cmd = {
+			[Windows.Clipboard]::GetText()
+		}
+	} else {
+		$cmd = {
+			[Windows.Clipboard]::GetText() -replace "`r", '' -split "`r`n"
+		}
+	}; #end if
+	
+	if ($JSON) {
+		$cmd = $cmd | ConvertFrom-JSON
+	}
+	
+	if([threading.thread]::CurrentThread.GetApartmentState() -eq 'MTA') {
+		& powershell -Sta -Command $cmd
+	} else {
+		& $cmd
+	}; #end if
+}; #end Get-Clipboard
+
+
+Function Watch-Clipboard {
+$cbclip = "test"
+while (Get-Clipboard -ne "") { 
+if ( (diff (Get-Clipboard -raw) $cbclip ) -ne $null) { 
+$cbclip = Get-Clipboard -raw
+$cbclip 
+sleep .5
+}; #end if 
+}; #end while
+}; #end Watch-Clipboard
+
+
+Function Send-Clipboard {
+Param(
+   [Parameter(Mandatory=$True,Position=1)]
+   [ipaddress]$serveraddr,
+   [Parameter(Mandatory=$True,Position=2)]
+   [int]$serverport,
+#   [switch]$PSObject,
+   [switch]$echo
+)
+$cbclip = "test"
+while (Get-Clipboard -ne "") { 
+if ( (diff (Get-Clipboard -raw) $cbclip ) -ne $null) { 
+$cbclip = Get-Clipboard -raw
+Send-Text -serveraddr $serveraddr -serverport $serverport -message $cbclip #-PSObject $PSObject
+if ($echo){
+$cbclip 
+}; #end if 
+sleep .2
+}; #end if 
+}; #end while
+}; #end Send-Clipboard
+
+
+Function Get-UsGovWeather {
+#https://blogs.technet.microsoft.com/heyscriptingguy/2010/11/07/use-powershell-to-retrieve-a-weather-forecast/
+ Param([string]$zip = 98104,
+       [int]$numberDays = 4,
+      [switch]$Fahrenheit
+	 )
+$URI = "http://www.weather.gov/forecasts/xml/DWMLgen/wsdl/ndfdXML.wsdl"
+$Proxy = New-WebServiceProxy -uri $URI -namespace WebServiceProxy
+[xml]$latlon=$proxy.LatLonListZipCode($zip)
+foreach($l in $latlon)
+{
+ $a = $l.dwml.latlonlist -split ",";
+ $lat = $a[0]
+ $lon = $a[1]
+ $sDate = get-date -UFormat %Y-%m-%d
+ $format = "Item24hourly"
+if ($Fahrenheit) { $unit = "e" }else { $unit = "m" } 
+ [xml]$weather = $Proxy.NDFDgenByDay($lat,$lon,$sDate,$numberDays,$unit,$format)
+ For($i = 0 ; $i -le $numberDays -1 ; $i ++)
+ {
+  New-Object psObject -Property @{
+  "Date" = ((Get-Date).addDays($i)).tostring("MM/dd/yyyy") ;
+  "maxTemp" = $weather.dwml.data.parameters.temperature[0].value[$i] ;
+  "minTemp" = $weather.dwml.data.parameters.temperature[1].value[$i] ;
+  "Summary" = $weather.dwml.data.parameters.weather."weather-conditions"[$i]."Weather-summary"}
+ }
+}
+}; #end Get-UsGovWeather
+
+
+Function Test-PortConnection {
+[CmdletBinding()]
+Param(
+    [Parameter(Position=1)]
+    [IPAddress]$IPAddress = "127.0.0.1",
+    [Parameter(Position=2)]
+    [int]$Port = 443
+)
+try {
+(new-object Net.Sockets.TcpClient).Connect("$($IPAddress.IPAddressToString)", $Port)
+} catch {
+return $false
+Write-Verbose -Message "Connection failed.";
+break
+} 
+return $true
+Write-Verbose -Message "Connection succeeded.";
+
+}; #end Test-PortConnection
+
+#endregion
+
+#region init
+#Set TLS 1.2:
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
+
+#Set UTF8 Encoding
+$OutputEncoding = New-Object -typename System.Text.UTF8Encoding
+#[Console]::OutputEncoding = New-Object -typename System.Text.UTF8Encoding #This setting messes up VI.
+
+#Need this for Image functions.
+[System.Reflection.Assembly]::LoadWithPartialName("System.Drawing") | out-null
+
+#Move to Profile?
+[ipaddress]$localhost = "127.0.0.1"
+$ProfileFolder = (split-path $PROFILE)
+
+#For the audio player 
+Add-Type -AssemblyName presentationCore
+$wmplayer = New-Object System.Windows.Media.MediaPlayer
+
+#Hate VIM
+if ($VIMPATH) {
+	Set-Alias vi   $VIMPATH
+	Set-Alias vim  $VIMPATH
+} else {
+	Write-Host -f red "VIM not found, disabling alias." 
+}; #end if VIMPATH
+
+#Love Notepad++i
+if ($NppPATH) {
+	Set-Alias note  $NppPATH
+} else {
+	Write-Host -f red "Notepad++ not found, disabling alias."
+}; #end if NppPATH
+
+#Fight with LYNX
+if ($LynxW32Path) {
+	Set-Alias LYNX  $LynxW32Path
+} else {
+	Write-Host -f red "LYNX not found, disabling alias."
+}; #end if LynxW32Path
+
+#Update with GIT
+if ($GITPath) {
+	Set-Alias GIT  $GITPath
+} else {
+	Write-Host -f red "GIT not found, disabling alias."
+}; #end if GITPath
+
+#$DontShowPSVersionOnStartup = $false # to turn off Powershell Version display.
+#if (!($DontShowPSVersionOnStartup)){
+#	Get-PSVersion
+#}
+
+#$DontShowPoweGILVersionOnStartup = $false # to turn off PowerGIL Build display.
+if (!($DontShowPoweGILVersionOnStartup)){
+	Get-ModuleVersion
+}
+#endregion
+
+#region PowerShiri
+Function Start-PowerShiri {
+Import-Module "C:\Dropbox\PowerShiri\PowerShiri.ps1" -Force
+}; #end Start-PowerShiri
+#Speech
+
+Function Read-Webpage ($URL) {
+$ycom = iwr $URL
+$yih = ($ycom.ParsedHtml.getElementsByTagName("p") | select innerhtml ).innerhtml
+return $yih
+}; #end Read-Webpage
+
+
+Function Say-This {
+#Rename to Out-Speech?
+Param(
+   [string]$saythis = "Type something for me to say"
+)
+Add-Type -AssemblyName System.Speech
+$synthesizer = New-Object -TypeName System.Speech.Synthesis.SpeechSynthesizer
+$synthesizer.Speak($saythis)
+}
+#endregion
+
+#region Time
+Function Convert-Time
+{
+	#If there's more than 1 option, have it loop. (FLAG)
+	param(
+		[Parameter(Mandatory=$false,Position=1)]
+		[string]$time = (get-date),
+		[validateset("AST","BST","CST","China","DST","EST","FST","GST","HST","IST","JST","Japan","KST","LST","MST","NST","PST","RST","Russia","SST","TST","UST","UTC","VST","YST")]
+		[string]$ToTZ = "PST",
+		[validateset("AST","BST","CST","China","DST","EST","FST","GST","HST","IST","JST","Japan","KST","LST","MST","NST","PST","RST","Russia","SST","TST","UST","UTC","VST","YST")]
+		[string]$FromTZ = "PST",
+		[string]$FromTimeZoneFullName = $null, 
+		[string]$ToTimeZoneFullName = $null,
+		[switch]$UTCtoo,
+		[switch]$ListTZones
+	)
+	#1. Funnel the TLAs into the fromtimezone
+	#2. Set the partnames to be a foreach loop. 
+
+
+	$SystemTZones = ([System.TimeZoneInfo]::GetSystemTimeZones()).id
+	if ($ListTZones) {
+		#ListTZones will just dump the system time zones.
+		$SystemTZones
+		Write-Host -f y "This system knows about the above time zones. Please use these with '-FromTimeZoneFullName' and '-ToTimeZoneFullName' parameters."
+		break
+	} else {
+		#Otherwise run the full script.
+		$TLATZ = @{
+			'AST' = "Alaskan Standard Time"
+			'BST' = "Bangladesh Standard Time"
+			'CST' = "Central Standard Time"
+			'China' = "China Standard Time"
+			'DST' = "Dateline Standard Time"
+			'EST' = "Eastern Standard Time"
+			'FST' = "Fiji Standard Time"
+			'GST' = "Greenwich Standard Time"
+			'HST' = "Hawaiian Standard Time"
+			'IST' = "India Standard Time"
+			'JST' = "Jordan Standard Time"
+			'Japan' = "Tokyo Standard Time"
+			'KST' = "Korea Standard Time"
+			'LST' = "Libya Standard Time"
+			'MST' = "Mountain Standard Time"
+			'NST' = "Newfoundland Standard Time"
+			'PST' = "Pacific Standard Time"
+			'RST' = "Russian Standard Time"
+			'Russia' = "Russian Standard Time"
+			'SST' = "Singapore Standard Time"
+			'TST' = "Tokyo Standard Time"
+			'UST' = "Ulaanbaatar Standard Time"
+			'UTC' = "UTC"
+			'VST' = "Venezuela Standard Time"
+			'YST' = "Yakutsk Standard Time"
+		}
+		
+		$fromtzone ="PST"
+		if ($FromTimeZoneFullName) {
+			$fromtzone = $SystemTZones |  where {$_ -like "*$FromTimeZoneFullName*"}
+#			$fromtzone = $FromTimeZoneFullName
+		} elseif ($FromTZ) {
+			$fromtzone = $TLATZ[$FromTZ]
+		} else {
+			Write-Host -f red "No 'From' time zone entered. Use -FromTZ or -FromTimeZoneFullName"
+			break
+		}; #end if fromTimeZone
+
+		
+		$oFromTimeZone = [System.TimeZoneInfo]::FindSystemTimeZoneById($fromtzone)
+		Write-Verbose "Converting from $oFromTimeZone"
+<#
+		$oFromTimeZone = foreach ($tz in $fromtzone) {
+		$tzz  = [System.TimeZoneInfo]::FindSystemTimeZoneById($tz); 
+		return ($tz + ": " + $tzz) 
+		}; #end foreach
+#>
+
+		
+		
+
+		$totzone = "PST"
+		if ($ToTimeZoneFullName) {
+#			$totzone = $ToTimeZoneFullName
+			$totzone = $SystemTZones |  where {$_ -like "*$ToTimeZoneFullName*"}
+		} elseif ($ToTZ) {
+			$totzone = $TLATZ[$ToTZ]
+		} else {
+			Write-Host -f red "No 'To' time zone entered. Use -ToTZ or -ToTimeZoneFullName"
+			break
+		}; #end if toTimeZone
+		
+		
+		$oToTimeZone = [System.TimeZoneInfo]::FindSystemTimeZoneById($totzone)
+		Write-Verbose "Converting to $oToTimeZone"
+<#
+		$oToTimeZone = foreach ($tz in $totzone) {
+		$tzz  = [System.TimeZoneInfo]::FindSystemTimeZoneById($tz); 
+		return ($tz + ": " + $tzz) 
+		}; #end foreach
+#>
+
+
+		$utc = [System.TimeZoneInfo]::ConvertTimeToUtc($time, $oFromTimeZone)
+		$newTime = [System.TimeZoneInfo]::ConvertTime($utc, $oToTimeZone)
+		  
+		$newtime
+		
+		if ($UTCtoo){
+			$utc
+		}; #end if UTC
+	}; #end if ListTZones
+
+}; #end Convert-Time
+
+#List of TLAs
+#$r = foreach ($name in (([System.TimeZoneInfo]::GetSystemTimeZones()).standardname)) {-join (($name).split(" ") | foreach {$_[0]})} ; 
+#$r | select -Unique | where {$_.length -eq 3} | sort
+
+#endregion
+
+#region Music!
+
+Function Start-Music {
+#http://www.adminarsenal.com/admin-arsenal-blog/powershell-music-remotely/
+param(
+   [Parameter(Mandatory=$True,Position=1)]
+   [uri]$FileName
+)
+#Add-Type -AssemblyName presentationCore
+#$FileName = [uri] "C:\temp\Futurama - Christmas Elves song.mp3"
+#$wmplayer = New-Object System.Windows.Media.MediaPlayer
+$wmplayer.Open($FileName)
+Start-Sleep 2 # This allows the $wmplayer time to load the audio file
+#$duration = $wmplayer.NaturalDuration.TimeSpan.TotalSeconds
+$wmplayer.Play()
+}
+
+Function Stop-Music {
+$wmplayer.Stop()
+$wmplayer.Close()
+}
+
+#endregion
+
+#region Conversions
+
+#1..50 | Filter-FizzBuzz
+#Function Filter-FizzBuzz
+Filter Filter-FizzBuzz {
+	if (!($_ % 15)) {
+		return "FizzBuzz"
+	} elseif (!($_ % 5)) {
+			return "Buzz"
+	} elseif (!($_ % 3)) {
+			return "Fizz"
+	} else {
+		return $_
+	}; #end if 15
+}; #end Filter-FizzBuzz
+
+Filter Flip-TextToBinary {
+[System.Text.Encoding]::UTF8.GetBytes($_) | %{ 
+[System.Convert]::ToString($_,2).PadLeft(8,'0')
+}
+#[System.Text.Encoding]::UTF8.GetBytes([System.Convert]::ToString($_,2).PadLeft(8,'0'))
+}
+
+Filter Flip-BinaryToText {
+Param(
+   [switch]$ASCII
+)
+if ($ASCII) {
+#[System.Text.Encoding]::ASCII.GetBytes($_)
+%{ 
+[System.Text.Encoding]::ASCII.GetString([System.Convert]::ToInt32($_,2)) 
+}; #end foreach
+} else {
+%{ 
+[System.Text.Encoding]::UTF8.GetString([System.Convert]::ToInt32($_,2)) 
+}; #end foreach
+}; #end if
+}; #end Filter
+
+Filter Flip-TextToBytes {
+	Param(
+	   [switch]$ASCII
+	)
+	if ($ASCII) {
+		[System.Text.Encoding]::ASCII.GetBytes($_)
+	} else {
+		[System.Text.Encoding]::Unicode.GetBytes($_)
+	}; #end if
+}; #end Filter
+
+<# Filter Flip-TextToHex {
+Param(
+   [switch]$ASCII
+)
+if ($ASCII) {
+$ab = [System.Text.Encoding]::ASCII.GetBytes($_);
+} else {
+$ab = [System.Text.Encoding]::UTF8.GetBytes($_);
+}; #end if
+$ac = [System.BitConverter]::ToString($ab);
+$ac.split("-")
+}; #end Filter
+ #>
+
+Filter Flip-BytesToText {
+	Param(
+	   [switch]$Unicode
+	)
+	if ($Unicode) {
+		#[System.Text.Encoding]::Unicode.GetString($_)
+		write-host "Unicode currently broken."
+	} else {
+		[System.Text.Encoding]::ASCII.GetString($_)
+	}; #end if ASCII 
+}; #end Flip-BytesToText
+
+Filter Flip-TextToBase64 {
+	$Bytes = [System.Text.Encoding]::Unicode.GetBytes($_)
+	$EncodedText =[Convert]::ToBase64String($Bytes)
+	$EncodedText
+}; #end Filter
+
+Filter Flip-Base64ToText {
+	$DecodedText = [System.Text.Encoding]::Unicode.GetString([System.Convert]::FromBase64String($_))
+	$DecodedText
+}; #end Filter
+
+Filter Flip-HexToText {
+	$_.Split(" ") | FOREACH {
+		[CHAR][BYTE]([CONVERT]::toint16($_,16))
+	}; #end foreach
+}; #end Flip-HexToText
+
+Filter Flip-TextToHex {
+	$_.ToCharArray() | FOREACH {
+		([CONVERT]::tostring([BYTE][CHAR]$_,16))
+	}; #end foreach
+}; #end Flip-HexToText
+
+Filter Flip-HexToBinary {
+	$_.Split(" ") | FOREACH {
+		([CONVERT]::toint16($_,16))
+	}; #end foreach
+}; #end Flip-HexToText
+
+#endregion
+
+#region Encryption
+#Run in Elevated: New-SelfSignedCertificate -CertStoreLocation cert:\LocalMachine\My -DnsName "gilgamech.com"
+
+Function Get-Encrypted {
+#http://powershell.org/wp/2014/02/01/revisited-powershell-and-encryption/
+Param(
+   [Parameter(Mandatory=$True,Position=1)]
+   [object]$Message,
+   [Parameter(Mandatory=$True,Position=2)]
+   [string]$file
+)
+Write-Host "Encrypting to $file..." -f y
+try
+{
+  Write-Host "Encrypting input..." -f y
+  $secureString = $Message | ConvertTo-SecureString -AsPlainText -Force
+#    $secureString = 'This is my password.  There are many like it, but this one is mine.' | 
+#                    ConvertTo-SecureString -AsPlainText -Force
+
+# Generate our new 32-byte AES key.  I don't recommend using Get-Random for this; the System.Security.Cryptography namespace offers a much more secure random number generator.
+
+    $key = New-Object byte[](32)
+    $rng = [System.Security.Cryptography.RNGCryptoServiceProvider]::Create()
+Write-Host "Creating key..." -f y
+    $rng.GetBytes($key)
+
+Write-Host "Encrypting input..." -f y
+    $encryptedString = ConvertFrom-SecureString -SecureString $secureString -Key $key
+Write-Host "Input encrypted." -f green
+
+    # This is the thumbprint of a certificate on my test system where I have the private key installed.
+
+    $thumbprint = (ls  -Path Cert:\CurrentUser\My\).Thumbprint
+    $cert = Get-Item -Path Cert:\CurrentUser\My\$thumbprint -ErrorAction Stop
+
+    $encryptedKey = $cert.PublicKey.Key.Encrypt($key, $true)
+Write-Host "Key encrypted." -f green
+
+    $object = New-Object psobject -Property @{
+        Key = $encryptedKey
+        Payload = $encryptedString
+    }
+
+Write-Host "Encryption complete, writing $file." -f green
+    $object | Export-Clixml $file
+
+}
+finally
+{
+    if ($null -ne $key) { [array]::Clear($key, 0, $key.Length) }
+Write-Host "Key cleared." -f green
+#    if ($null -ne $secureString) { [array]::Clear($secureString, 0, $secureString.Length) }
+#    if ($null -ne $rng) { [array]::Clear($rng, 0, $rng.Length) }
+#    if ($null -ne $encryptedString) { [array]::Clear($encryptedString, 0, $encryptedString.Length) }
+#    if ($null -ne $thumbprint) { [array]::Clear($thumbprint, 0, $thumbprint.Length) }
+#    if ($null -ne $cert) { [array]::Clear($cert, 0, $cert.Length) }
+#    if ($null -ne $encryptedKey) { [array]::Clear($encryptedKey, 0, $encryptedKey.Length) }
+#    if ($null -ne $object) { [array]::Clear($object, 0, $object.Length) }
+
+}
+}; #end Get-Encrypted 
+
+
+
+Function Get-Decrypted {
+#http://powershell.org/wp/2014/02/01/revisited-powershell-and-encryption/
+Param(
+   [Parameter(Mandatory=$True,Position=1)]
+   [string]$file
+)
+Write-Host "Decrypting $file..." -f y
+try
+{
+Write-Host "Reading file $file" -f green
+    $object = Import-Clixml -Path $file
+Write-Host "Removing $file" -f y
+	rm $file
+
+    $thumbprint = (ls  -Path Cert:\CurrentUser\My\).Thumbprint
+    $cert = Get-Item -Path Cert:\CurrentUser\My\$thumbprint -ErrorAction Stop
+
+    $key = $cert.PrivateKey.Decrypt($object.Key, $true)
+Write-Host "Key decrypted." -f green
+Write-Host "Decrypting payload, this may take a while..." -f y
+    #$secureString = $object.Payload | ConvertTo-SecureString -Key $key
+	$secureString = $object.Payload | ConvertTo-SecureString -Key $key
+Write-Host "Input decrypted." -f green
+	ConvertFrom-SecureToPlain $secureString
+Write-Host "Decryption complete. Hope you wrote this to a variable!" -f green
+}
+finally
+{
+    if ($null -ne $key) { [array]::Clear($key, 0, $key.Length) }
+Write-Host "Key cleared." -f green
+} 
+}; #end Get-Decrypted
+
+#endregion
+
+#region Images
+
+Function Take-Screenshot {
+#https://stackoverflow.com/questions/2969321/how-can-i-do-a-screen-capture-in-windows-powershell
+	[CmdletBinding()]
+	Param(
+		[int]$xMin = 0,
+		#[ValidateRange(($xMin),999999)]
+		[int]$xMax = 1000,
+		[int]$yMin = 0,
+		#[ValidateRange(($yMin),999999)]
+		[int]$yMax = 900,
+		[Drawing.Rectangle]$bounds = [Drawing.Rectangle]::FromLTRB($xMin, $yMin, $xMax, $yMax),
+		[switch]$ascii,
+		[string]$path = (".\" + (get-date -f yy-MM-dd-HH-mm-ss) + ".png")
+	) #end Param
+	
+	if ($xMin -gt $xMax) {
+		0;
+		write-verbose "First value xMin = $xMin must be less than Second value xMax = $xMax";
+		return
+	}; #end if xMin
+	
+	if ($yMin -gt $yMax) {
+		0;
+		write-verbose "Third value yMin = $yMin must be less than Fourth value yMax = $yMax";
+		return
+	}; #end if yMin
+	
+	$bmp = New-Object Drawing.Bitmap $bounds.width, $bounds.height
+	$graphics = [Drawing.Graphics]::FromImage($bmp)
+	$graphics.CopyFromScreen($bounds.Location, [Drawing.Point]::Empty, $bounds.size)
+	
+	if (test-path $path) {
+		rm $path 
+	}; #end if path
+	
+	$bmp.Save($path)
+	write-host -f green "File $path written."
+	$graphics.Dispose()
+	$bmp.Dispose()
+	if ($ascii) {
+		ciai $path
+	}; #end if ascii
+}; #end Take-Screenshot
+
+
+Function Invoke-PowerGilImage {
+# load the appropriate assemblies 
+	[void][Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms") 
+	[void][Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms.DataVisualization")
+
+	# create chart object 
+	$Chart = New-object System.Windows.Forms.DataVisualization.Charting.Chart 
+	$Chart.Width = 500 
+	$Chart.Height = 400 
+	$Chart.Left = 40 
+	$Chart.Top = 30
+
+	# create a chartarea to draw on and add to chart 
+	$ChartArea = New-Object System.Windows.Forms.DataVisualization.Charting.ChartArea 
+	$Chart.ChartAreas.Add($ChartArea)
+
+	# add data to chart 
+	$Cities = @{London=7556900; Berlin=3429900; Madrid=3213271; Rome=2726539; 
+				Paris=2188500} 
+	[void]$Chart.Series.Add("Data") 
+	$Chart.Series["Data"].Points.DataBindXY($Cities.Keys, $Cities.Values)
+
+	# display the chart on a form 
+	$Chart.Anchor = [System.Windows.Forms.AnchorStyles]::Bottom -bor [System.Windows.Forms.AnchorStyles]::Right -bor
+					[System.Windows.Forms.AnchorStyles]::Top -bor [System.Windows.Forms.AnchorStyles]::Left 
+	$Form = New-Object Windows.Forms.Form 
+	$Form.Text = "PowerShell Chart" 
+	$Form.Width = 600 
+	$Form.Height = 600 
+	$Form.controls.add($Chart) 
+	$Form.Add_Shown({$Form.Activate()}) 
+	$Form.ShowDialog()
+}; #end Invoke-PowerGilImage
+
+
+Function Display-Image {
+# Loosely based on http://www.vistax64.com/powershell/202216-display-image-powershell.html
+	Param(
+	   [Parameter(Mandatory=$True,Position=1)]
+	   [string]$FileName
+	)
+	[void][reflection.assembly]::LoadWithPartialName("System.Windows.Forms")
+
+	$file = (get-item $FileName)
+	#$file = (get-item "c:\image.jpg")
+
+	$img = [System.Drawing.Image]::Fromfile($file);
+
+	# This tip from http://stackoverflow.com/questions/3358372/windows-forms-look-different-in-powershell-and-powershell-ise-why/3359274#3359274
+	[System.Windows.Forms.Application]::EnableVisualStyles();
+	$form = new-object Windows.Forms.Form
+	$form.Text = "Image Viewer"
+	$form.Width = $img.Size.Width;
+	$form.Height =  $img.Size.Height;
+	$pictureBox = new-object Windows.Forms.PictureBox
+	$pictureBox.Width =  $img.Size.Width;
+	$pictureBox.Height =  $img.Size.Height;
+
+	$pictureBox.Image = $img;
+	$form.controls.add($pictureBox)
+	$form.Add_Shown( { $form.Activate() } )
+	$form.ShowDialog()
+	#$form.Show();
+}; #end Display-Image
+
+
+Function ConvertImage-ToASCIIArt {
+	#------------------------------------------------------------------------------ 
+	# Copyright 2006 Adrian Milliner (ps1 at soapyfrog dot com) 
+	# http://ps1.soapyfrog.com 
+	# 
+	# This work is licenced under the Creative Commons  
+	# Attribution-NonCommercial-ShareAlike 2.5 License.  
+	# To view a copy of this licence, visit  
+	# http://creativecommons.org/licenses/by-nc-sa/2.5/  
+	# or send a letter to  
+	# Creative Commons, 559 Nathan Abbott Way, Stanford, California 94305, USA. 
+	#------------------------------------------------------------------------------ 
+	 
+	#------------------------------------------------------------------------------ 
+	# This script loads the specified image and outputs an ascii version to the 
+	# pipe, line by line. 
+	# Heavily modified by Gil.
+	param( 
+		[Parameter(Mandatory=$True,Position=1)]
+		[string]$path, #= $(throw "Supply an image path"), 
+		[int]$maxwidth, # default is width of console 
+		[ValidateSet("ascii","shade","bw")]
+		[string]$palette = "ascii", # choose a palette, "ascii" or "shade" 
+		[float]$ratio = 1.5 # 1.5 means char height is 1.5 x width 
+	) #end Param
+	 
+	 
+	#------------------------------------------------------------------------------ 
+	# here we go 
+	 
+	$palettes = @{ 
+	  "ascii" = " .,:;=|iI+hHOE#`$" 
+	  "shade" = " " + [char]0x2591 + [char]0x2592 + [char]0x2593 + [char]0x2588 
+	  "bw"    = " " + [char]0x2588 
+	} 
+
+	$c = $palettes[$palette] 
+
+<#
+	if (-not $c) { 
+	  write-warning "palette should be one of:  $($palettes.keys.GetEnumerator())" 
+	  write-warning "defaulting to ascii" 
+	  $c = $palettes.ascii 
+	} 
+#>
+
+	[char[]]$charpalette = $c.ToCharArray() 
+	 
+	# We load the drawing assembly at the top of PowerGIL
+	$path = (Resolve-Path $path)
+
+	# load the image
+	$image = [Drawing.Image]::FromFile($path)  
+	if ($maxwidth -le 0) { [int]$maxwidth = $host.ui.rawui.WindowSize.Width - 1} 
+	[int]$imgwidth = $image.Width 
+	[int]$maxheight = $image.Height / ($imgwidth / $maxwidth) / $ratio 
+	$bitmap = new-object Drawing.Bitmap ($image,$maxwidth,$maxheight) 
+	[int]$bwidth = $bitmap.Width; [int]$bheight = $bitmap.Height 
+	# draw it! 
+	$cplen = $charpalette.count 
+	for ([int]$y=0; $y -lt $bheight; $y++) { 
+	  $line = "" 
+	  for ([int]$x=0; $x -lt $bwidth; $x++) { 
+		$colour = $bitmap.GetPixel($x,$y) 
+		$bright = $colour.GetBrightness() 
+		[int]$offset = [Math]::Floor($bright*$cplen) 
+		$ch = $charpalette[$offset] 
+		if (-not $ch) { $ch = $charpalette[-1] } #overflow 
+		$line += $ch 
+	  } 
+	  $line 
+	} 
+
+}; #end ConvertImage-ToASCIIArt
+if ((Get-Alias ciai -ErrorAction SilentlyContinue) -eq $null) {
+new-alias -name ciai -value ConvertImage-ToASCIIArt
+} #end if Get-Alias ciai
+
+#endregion
+
+#region UDP
+
+Function Send-UDPText {
+#http://powershell.com/cs/blogs/tips/archive/2012/05/09/communicating-between-multiple-powershells-via-udp.aspx
+	Param(
+		[Parameter(Mandatory=$True,Position=1)]
+		[ipaddress]$serveraddr,
+		[Parameter(Mandatory=$True,Position=2)]
+		[int]$serverport,
+		[Parameter(Mandatory=$True,Position=3)]
+		[object]$Message,
+		[switch]$JSON,
+		[switch]$Secure
+	) #end Param
+
+	#Basic protection, at least it's not plaintext. Doesn't work with JSON IIRC.
+	if ($Secure) {
+		Write-Host "Converting to SecureString..." -f y
+		$Message = ConvertTo-SecureString -AsPlainText $Message.ToString() -Force
+		Write-Host "Conversion complete, sending." -f green
+	}; #end if
+	
+	#Send Objects with JSON flag set on both sender and listener, otherwise they'll just be the useless output strings.
+	if ($JSON) {
+		$Message = ConvertTo-JSON $Message
+	}; #end if
+		
+		#Create endpoint & UDP client
+		$endpoint = New-Object System.Net.IPEndPoint ($serveraddr,$serverport)
+		$udpclient= New-Object System.Net.Sockets.UdpClient
+		
+		#Swaps the message from ASCII to bytes. Should change for like Flip-TextToBytes (FLAG)
+		$bytes=[Text.Encoding]::ASCII.GetBytes($Message)
+		$bytesSent=$udpclient.Send($bytes,$bytes.length,$endpoint)
+		$udpclient.Close()
+}; #end Send-Text 
+
+
+Function Start-UDPListen {
+#http://powershell.com/cs/blogs/tips/archive/2012/05/09/communicating-between-multiple-powershells-via-udp.aspx
+	Param(
+		[Parameter(Mandatory=$True,Position=1)]
+		[int]$ServerPort,
+		[Parameter(Position=2)]
+		[switch]$Continuous,
+		[Parameter(Position=3)]
+		[switch]$JSON,
+		[switch]$Secure
+	) #end Param
+	#If there's no endpoint, create one - this tries to avoid errors that the endpoint already exists.
+	#Swap [IPAddress]::Any for an address (or range?) to limit who can send to this.
+	if ($endpoint.port -eq $null) {
+		$endpoint = New-Object System.Net.IPEndPoint ([IPAddress]::Any,$serverport)
+	}; #end if
+
+	Write-Host "Now listening on port" $serverport -f green
+	if (($Continuous)) {
+		Write-Host "Continuous mode" -f "Red"
+	}; #end if
+	
+	#Create the socket
+	$udpclient = New-Object System.Net.Sockets.UdpClient $serverport
+
+	#Quick and dirty way to loop when iterate is set to true. 
+	$iterate = $true
+	while ($iterate) {
+		#Open socket, store 
+		$content = $udpclient.Receive([ref]$endpoint)
+		#Swaps the message from bytes to ASCII. Should change for like Flip-BytesToText (FLAG)
+		$content = [Text.Encoding]::ASCII.GetString($content)
+
+		#If you're receiving Objects, expect them to be sent as JSON strings, so convert them back to Objects.
+		if ($JSON) {
+			$content = ConvertFrom-JSON $content
+		} else {	}; #end if - Not sure what was going there.
+		if ($Secure) {
+			$content = ConvertFrom-SecureToPlain $content
+		}; #end if
+
+		#If Continuous flag wasn't set, dump us from the loop.
+		if (!($Continuous)) {
+			$iterate = $false
+		}; #end if
+		
+		#Unsure of output format, this way just works. 
+		$content
+
+	} # end while
+
+}; #end Start-Listen
+
+# endregion
+
+#region Enables the [Audio] stuffs. 
+#https://stackoverflow.com/questions/255419/how-can-i-mute-unmute-my-sound-from-powershell
+Add-Type -TypeDefinition @'
+using System.Runtime.InteropServices;
+
+[Guid("5CDF2C82-841E-4546-9722-0CF74078229A"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+interface IAudioEndpointVolume {
+  // f(), g(), ... are unused COM method slots. Define these if you care
+  int f(); int g(); int h(); int i();
+  int SetMasterVolumeLevelScalar(float fLevel, System.Guid pguidEventContext);
+  int j();
+  int GetMasterVolumeLevelScalar(out float pfLevel);
+  int k(); int l(); int m(); int n();
+  int SetMute([MarshalAs(UnmanagedType.Bool)] bool bMute, System.Guid pguidEventContext);
+  int GetMute(out bool pbMute);
+}
+[Guid("D666063F-1587-4E43-81F1-B948E807363F"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+interface IMMDevice {
+  int Activate(ref System.Guid id, int clsCtx, int activationParams, out IAudioEndpointVolume aev);
+}
+[Guid("A95664D2-9614-4F35-A746-DE8DB63617E6"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+interface IMMDeviceEnumerator {
+  int f(); // Unused
+  int GetDefaultAudioEndpoint(int dataFlow, int role, out IMMDevice endpoint);
+}
+[ComImport, Guid("BCDE0395-E52F-467C-8E3D-C4579291692E")] class MMDeviceEnumeratorComObject { }
+
+public class Audio {
+  static IAudioEndpointVolume Vol() {
+    var enumerator = new MMDeviceEnumeratorComObject() as IMMDeviceEnumerator;
+    IMMDevice dev = null;
+    Marshal.ThrowExceptionForHR(enumerator.GetDefaultAudioEndpoint(/*eRender*/ 0, /*eMultimedia*/ 1, out dev));
+    IAudioEndpointVolume epv = null;
+    var epvid = typeof(IAudioEndpointVolume).GUID;
+    Marshal.ThrowExceptionForHR(dev.Activate(ref epvid, /*CLSCTX_ALL*/ 23, 0, out epv));
+    return epv;
+  }
+  public static float Volume {
+    get {float v = -1; Marshal.ThrowExceptionForHR(Vol().GetMasterVolumeLevelScalar(out v)); return v;}
+    set {Marshal.ThrowExceptionForHR(Vol().SetMasterVolumeLevelScalar(value, System.Guid.Empty));}
+  }
+  public static bool Mute {
+    get { bool mute; Marshal.ThrowExceptionForHR(Vol().GetMute(out mute)); return mute; }
+    set { Marshal.ThrowExceptionForHR(Vol().SetMute(value, System.Guid.Empty)); }
+  }
+}
+'@
+
+
+#endregion 
+
+#region footer
+
+
+#endregion
+
+
+
+
+
+
+
