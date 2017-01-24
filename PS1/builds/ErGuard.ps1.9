@@ -1,0 +1,45 @@
+# C:\Dropbox\Public\html5\PS1\ErGuard.ps1 Build: 9 2016-06-12T20:55:24  Copyright Gilgamech Technologies 
+# Update Path: C:\Dropbox\C:\Dropbox\Public\html5\PS1\ErGuard.ps1
+# Build : LineNo : Update Notes
+# 5 : 14 : $ErrOutput = new_object System.Object | select_object "ErrFileName","ErrLine","ErrChar","ErrMessage","ErrResolution"
+# 6 : 9 : Get_Error
+# 7 : 24 :  if _$ErrOutput.Message _like "*parameter*"_ _   $ResolveLine = $ErrOutput.Text + ","  _; #end if ErrOutput.Message
+# 8 : 14 :  Param_    [switch]$Resolve   _; #end Param
+# 9 : 35 :  if _$Resolve_ _   $ResolveText  _; #end if Resolve
+$ErGuard = 'C:\Dropbox\Public\html5\PS1\ErGuard.ps1'
+Write-Host -f green "$ErGuard build: $((gc $ErGuard)[0].split(' ')[3] )"
+
+
+Function Get-Error {
+	Param(
+		[switch]$Resolve
+	); #end Param
+	
+	$ErrOutput = new-object System.Object | select-object "FileName","Line","Char","Message","Resolution","Text"
+
+	[array]$ErrTxt = $error[0].tostring().split("`n")
+	$ErrOutput.FileName = $ErrTxt[0].split(" :")[1] + ":" + $ErrTxt[0].split(" :")[2]
+	$ErrFile = (gc $ErrOutput.FileName)
+	$ErrOutput.Line = $ErrTxt[0].split(" :")[3]
+	$ErrOutput.Char = $ErrTxt[0].split(" :")[5]
+	$ErrOutput.Message = $ErrTxt[3]
+	$ErrOutput.Resolution = $ErrTxt[3].split("'")[1]
+	$ErrOutput.Text = $ErrFile[$ErrOutput.Line - 1]
+	$ErrOutput
+	
+	if ($ErrOutput.Message -like "*parameter*") {
+		$ResolveLine = $ErrOutput.Text + ","
+	}; #end if ErrOutput.Message
+	$ResolveText = $ErrTxt[0..($ErrOutput.Line -1)]
+	$ResolveText = $ResolveLine
+	$ResolveText = $ErrTxt[($ErrOutput.Line)..$ErrTxt.Length]
+	if ($Resolve) {
+		$ResolveText
+	}; #end if Resolve
+	
+}; #end Get-Error
+
+
+
+
+

@@ -1,0 +1,49 @@
+# C:\Dropbox\Public\html5\PS1\ErGuard.ps1 Build: 10 2016-06-12T21:04:16  Copyright Gilgamech Technologies 
+# Update Path: C:\Dropbox\C:\Dropbox\Public\html5\PS1\ErGuard.ps1
+# Build : LineNo : Update Notes
+# 6 : 9 : Get_Error
+# 7 : 24 :  if _$ErrOutput.Message _like "*parameter*"_ _   $ResolveLine = $ErrOutput.Text + ","  _; #end if ErrOutput.Message
+# 8 : 14 :  Param_    [switch]$Resolve   _; #end Param
+# 9 : 35 :  if _$Resolve_ _   $ResolveText  _; #end if Resolve
+# 10 : 17 :  if _$Error_ _   #a  _; #end if Error
+$ErGuard = 'C:\Dropbox\Public\html5\PS1\ErGuard.ps1'
+Write-Host -f green "$ErGuard build: $((gc $ErGuard)[0].split(' ')[3] )"
+
+
+Function Get-Error {
+	Param(
+		[switch]$Resolve
+	); #end Param
+	
+	if ($Error) {
+		#a
+	}; #end if Error
+	$ErrOutput = new-object System.Object | select-object "FileName","Line","Char","Message","Resolution","Text"
+
+	[array]$ErrTxt = $error[0].tostring().split("`n")
+	$ErrOutput.FileName = $ErrTxt[0].split(" :")[1] + ":" + $ErrTxt[0].split(" :")[2]
+	$ErrFile = (gc $ErrOutput.FileName)
+	$ErrOutput.Line = $ErrTxt[0].split(" :")[3]
+	$ErrOutput.Char = $ErrTxt[0].split(" :")[5]
+	$ErrOutput.Message = $ErrTxt[3]
+	$ErrOutput.Resolution = $ErrTxt[3].split("'")[1]
+	$ErrOutput.Text = $ErrFile[$ErrOutput.Line - 1]
+	$ErrOutput
+	
+	if ($ErrOutput.Message -like "*parameter*") {
+		$ResolveLine = $ErrOutput.Text + ","
+	}; #end if ErrOutput.Message
+	$ResolveText += $ErrFile[0..($ErrOutput.Line -2)]
+	$ResolveText += $ResolveLine
+	$ResolveText += $ErrFile[($ErrOutput.Line)..$ErrFile.Length]
+	if ($Resolve) {
+		Insert-TextIntoFile -FileContents $ResolveText -FileName $ErrOutput.FileName
+		Restart-Powershell
+	}; #end if Resolve
+	
+}; #end Get-Error
+
+
+
+
+#Get-Error -Resolve

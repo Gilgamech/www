@@ -1,0 +1,20 @@
+# C:\Dropbox\Public\html5\PS1\ErGuard.ps1 Build: 5 2016-06-12T19:57:42  Copyright Gilgamech Technologies 
+# Update Path: C:\Dropbox\C:\Dropbox\Public\html5\PS1\ErGuard.ps1
+# Build : LineNo : Update Notes
+# 1 : 12 : Function Get_Error _      _; #end Get_Error
+# 2 : 15 : System.Management.Automation.ParseException: At line:1 char:6  + $err[0[  +      ~ Array index expression is missing or not valid.    At line:1 char:6  + $err[0[  +      ~~ Unexpected token '0[' in expression or statement.         at System.Management.Automation.Runspaces.PipelineBase.Invoke_IEnumerable input_     at Microsoft.PowerShell.Executor.ExecuteCommandHelper_Pipeline tempPipeline, Exception& exceptionThrown, ExecutionOptions options_
+# 3 : 15 : [array]$err = $error[0].tostring__.split_"`n"_
+# 4 : 16 : $err
+# 5 : 14 : $ErrOutput = new_object System.Object | select_object "ErrFileName","ErrLine","ErrChar","ErrMessage","ErrResolution"
+$ErGuard = 'C:\Dropbox\Public\html5\PS1\ErGuard.ps1'
+Write-Host -f green "$ErGuard build: $((gc $ErGuard)[0].split(' ')[3] )"
+
+
+Function Get-Error {
+	
+$ErrOutput = new-object System.Object | select-object "ErrFileName","ErrLine","ErrChar","ErrMessage","ErrResolution"
+	
+	[array]$e1 = $error[0].tostring().split("`n")
+	$e1
+
+}; #end Get-Error

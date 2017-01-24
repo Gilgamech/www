@@ -1,0 +1,71 @@
+# C:\Dropbox\Public\html5\PS1\EnGuard.ps1 Build: 13 2016-06-26T09:43:01  Copyright Gilgamech Technologies 
+# Update Path: http://Gilgamech.com/PS1/EnGuard.ps1
+# Build : LineNo : Update Notes
+# 9 : 35 :  if _$Resolve_ _   $ResolveText  _; #end if Resolve
+# 10 : 17 :  if _$Error_ _   #a  _; #end if Error
+# 11 : 17 :  if _$Error_ _   #a  _ else _   "No Errors."  _; #end if Error
+# 12 : 62 : Function Check_Memory _      _; #end Check_Memory
+# 13 : 65 : __Get_RunningProcess | where _$_.name _like "*powershell*"_ _.privatememorysize64 | sort _Descending_[0] _gt 1gb
+$EnGuard = 'C:\Dropbox\Public\html5\PS1\EnGuard.ps1'
+
+
+Function Get-Error {
+	[CmdletBinding()]
+	Param(
+		[switch]$Resolve
+	); #end Param
+	
+	if ($Error) {
+		$Text = $Error[0]
+		$File = (gc $Text.InvocationInfo.ScriptName)
+		$Line = $Text.InvocationInfo.ScriptLineNumber
+		
+		$Text.Exception
+		$Text.InvocationInfo
+		
+		$ResolveText += $File[0..($Line -2)]
+		
+		if ($Text.Exception -like '*Missing ''`)'' in function parameter list.*') {
+			$ResolveText += $File[$Line - 1] + ","
+			Write-Verbose "Proposed change: $($ResolveText[-1])"
+		}; #end if Text.Message
+		
+		if ($Text.Exception -like '*Missing function body in function declaration.*') {
+			$ResolveText += $File[$Line - 1] + "`{"
+			Write-Verbose "Proposed change: $($ResolveText[-1])"
+		}; #end if Text.Message
+		
+		$ResolveText += $File[($Line)..$File.Length]
+		
+		#Need to make it so Resolve only works on stuff we know how to fix.
+		if ($Resolve) {
+			if ($Text.Exception -like '*Missing ''`)'' in function parameter list.*') {
+				"Adding a comma to fix a parameter."
+				Insert-TextIntoFile -FileContents $ResolveText -FileName $Text.InvocationInfo.ScriptName
+				Restart-Powershell
+			} elseif ($Text.Exception -like '*Missing function body in function declaration.*') {
+				"Adding an opening bracket to fix a function."
+				Insert-TextIntoFile -FileContents $ResolveText -FileName $Text.InvocationInfo.ScriptName
+				Restart-Powershell
+			} else {
+				"EnGuard doesn't know how to fix that."
+				break
+			}; #end if Text.Exception
+		}; #end if Resolve
+	} else {
+		"EnGuard found no errors."
+	}; #end if Error
+	
+}; #end Get-Error
+
+
+#Check-Memory to monitor memory use and restart Powershell when it's too high.
+Function Check-Memory {
+	
+	
+((Get-RunningProcess | where {$_.name -like "*powershell*"} ).privatememorysize64 | sort -Descending)[0] -gt 1gb
+
+}; #end Check-Memory
+
+$EnGuardStatus = Get-Error -Resolve
+Write-Host -f green "$EnGuardStatus Build: $((gc $EnGuard)[0].split(' ')[3] )"
