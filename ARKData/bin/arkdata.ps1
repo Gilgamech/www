@@ -442,7 +442,7 @@ Function Get-ARKDataFileDate {
 
 Filter Convert-SymbolsToUnderscore {
 	if ($_) {
-		$_ = $_ -replace(" ","_")
+		#$_ = $_ -replace(" ","_")
 		$_ = $_ -replace("``","_")
 		#$_ = $_ -replace("[~]","_")
 		#$_ = $_ -replace("[!]","_")
