@@ -20,6 +20,13 @@
 			  color=black;
 			  text-decoration: none;
 			}
+	input[type="number"] {
+	width:60px;
+			}
+	input {
+	display: table-cell;
+    text-align: center;
+			}
 	H1		{font: 16px Arial;font-weight: bold;color=black;text-align: center;}
 	H2		{font: 14px Arial;font-weight: bold;color=black;text-align: center;}
 	H3		{font: 12px Arial;font-weight: bold;color=black;text-align: center;}

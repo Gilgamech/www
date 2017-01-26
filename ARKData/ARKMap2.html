@@ -29,5 +29,36 @@
     <input type="text" id="member" name="member" value="">Number of members: (max. 10)<br />
     <a href="#" id="filldetails" onclick="addFields()">Fill Details</a>
     <div id="container"/>
+
+<form enctype='application/json'>
+<input name='name' value='Bender'>
+<select name='hind'>
+<option selected>Bitable</option>
+<option>Kickable</option>
+</select>
+<input type='checkbox' name='shiny' checked>
+</form>
+
+// produces
+{
+"name":   "Bender"
+, "hind":   "Bitable"
+, "shiny":  true
+}
+	
+<form action="http://gilgamech.com/ARKData/ARKMap1.json" method="POST">
+POST
+  <button type="submit">Log in</button>
+</form>
+<script>
+  var form = document.querySelector("form");
+  console.log(form.elements[1].type);
+  // ? password
+  // console.log(form.elements.password.type);
+  // ? password
+  console.log(form.elements.name.form == form);
+  // ? true
+</script>
+	
 </body>
 </html>

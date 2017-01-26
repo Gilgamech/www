@@ -78,30 +78,34 @@ function loadARKMap() {
     
 }
 
-function addFields(){
-	// Number of inputs to create
-	var number = document.getElementById("member").value;
-	// Container <div> where dynamic content will be placed
+//https://stackoverflow.com/questions/14853779/adding-input-elements-dynamically-to-form
+function addARKFields(type,id,placeholder,value,maxlength,size,min,max){
 	var container = document.getElementById("container");
-	// Clear previous contents of the container
-	while (container.hasChildNodes()) {
-		container.removeChild(container.lastChild);
-	}
-	for (i=0;i<number;i++){
-		// Append a node with a random text
-		container.appendChild(document.createTextNode("Member " + (i+1)));
-		// Create an <input> element, set its type and name attributes
-		var input = document.createElement("input");
-		input.type = "text";
-		input.name = "member" + i;
-		input.placeholder = input.name
-		container.appendChild(input);
-		// Append a line break 
-		container.appendChild(document.createElement("br"));
-	}
+	// Create an <input> element, set its type and name attributes
+	var input = document.createElement("input");
+	input.type = type;
+	input.id = id;
+	input.placeholder = placeholder;
+	input.value = value;
+	input.maxlength = maxlength;
+	input.size = size;
+	input.min = min;
+	input.max = max;
+	container.appendChild(input);
 }
+	// Number of inputs to create
+	// var number = document.getElementById("member").value;
+	// Container <div> where dynamic content will be placed
+	// Clear previous contents of the container
+	//while (container.hasChildNodes()) {
+	//	container.removeChild(container.lastChild);
+	//}
+	// for (i=0;i<number;i++){
+		// Append a node with a random text
+		// container.appendChild(document.createTextNode("Member " + (i)));
+	// }
 
-		function loadTribes() {
+function loadTribes() {
     
     loadJSON("http://gilgamech.com/ARKData/tribe.json", function(response) {
   
@@ -111,7 +115,32 @@ function addFields(){
     
 }
 
-//draw it all
+function updateTribeFields() {
+	for (i = 0; i < ARKMapJSON.length; i++) { 
+		// Set up X, Y and Tribe name.
+		TribeX = (ARKMapJSON[i].Long * Math.round((canvas.width/100))* 10 ) / 10;
+		TribeY = (ARKMapJSON[i].Lat * Math.round((canvas.height/100))* 10 ) / 10;
+		TribeName = (ARKMapJSON[i].TribeName)
+		Type = (ARKMapJSON[i].Type)
+		Comments = (ARKMapJSON[i].Comments)
+
+		// document.getElementById('TribeName').value=TribeName ; 
+		//addARKFields(type,id,placeholder,value,maxlength,size);
+		addARKFields("Text",("TribeName" + i),"Tribe name",ARKMapJSON[i].TribeName,32,24);
+		addARKFields("Text",("BaseType" + i),"Base type",ARKMapJSON[i].Type,16,8);
+		addARKFields("Number",("Lat" + i),"Lat",ARKMapJSON[i].Lat,4,4,0,100);
+		addARKFields("Number",("Long" + i),"Long",ARKMapJSON[i].Long,4,4,0,100);
+		addARKFields("Text",("LastSeenDate" + i),"Last Seen Date",ARKMapJSON[i].LastSeenDate,4,8);
+		addARKFields("Text",("DestroyByDate" + i),"Destroy By Date",ARKMapJSON[i].DestroyDate,8,16);
+		addARKFields("Number",("DestroyBy6Digit" + i),"6Digit","",6,6,999999);
+		addARKFields("Text",("Comments" + i),"Comments (140 char limit)",ARKMapJSON[i].Comments,140,40);
+		// Append a line break 
+		container.appendChild(document.createElement("br"));
+	}; 
+	  
+}
+
+  //draw it all
 var render = function () {
   if (bgReady) {
     ctx.drawImage(bgImage, 0, 0);
@@ -146,6 +175,7 @@ for (i = 0; i < ARKMapJSON.length; i++) {
 	ctx.textAlign = "left";
 	ctx.fillText((ARKMapJSON[i].TribeName), TribeX, TribeY+5);
 
+
 	//Is the mouse near a base?
 	if (
 		 TribeX > (mousePos.x  - 16) 
@@ -158,14 +188,13 @@ for (i = 0; i < ARKMapJSON.length; i++) {
 		CursorText3 = "Demolish allowed on: " + ARKMapJSON[i].DestroyDate;
 		CursorText4 = Comments;
 		mouseover = 1;
-		document.getElementById('TribeName').value=TribeName ; 
-	} else {
+		} else {
 		
 	}
 	
 }; 
   
-
+  
     ctx.font = "12px Helvetica";
 	TextWidthMax = Math.max(ctx.measureText(CursorText2).width, Math.max(ctx.measureText(CursorText3).width, ctx.measureText(CursorText4).width));
 

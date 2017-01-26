@@ -29,7 +29,9 @@
 		text-decoration: underline;
 		color: #660066;
 		}
-
+	input[type="number"] {
+	width:50px;
+		}
 }
 /* iPhone-specific styles */
 @media only screen and (max-device-width: 480px) { 
