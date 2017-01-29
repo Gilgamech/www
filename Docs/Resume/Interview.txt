@@ -1,0 +1,122 @@
+Intervew Date: 14:00 2/18/2015
+Interview Location: 200 W. Thomas St. Suite 400, Seattle, WA 98119
+Interviewers: Roger Moore - Head of IT, Kami - HR, Brad Younge? - CTO cofounder (phone), 
+Missed: Trent Schwartz - Ops (acct mgr),  Todd & Evan, CEO & cofounder
+Previous Interviewers: Courtny (email), Kami Chau (phone 2/11) 
+Heard about: Kaitlin@provisional.com
+
+General/basic questions:
+What are the office's hours? 
+Flex, match internal customers
+Pay rate? 
+in range
+Days off? 
+Benefits? 
+
+About the company:
+Why is the position open? Expansion or personnel replacement? Expansion
+How many employees are there in the company? How many are managers? What's the ratio of employees to managers? 65/?/?
+Estimate the company's retention or turnover rates? 18-65 in past year
+Who is the employee who's been here the longest? Who is the hardest to get along with? 
+Find out who is their biggest competitor - how are they different? bit titan burns partner bridges 
+
+Pointers for the interview and great questions to ask:
+What are you looking for in a candidate, and what do they have to do in order to be successful? help automate new user deployments, build network, take over new user process, own hyper-v install
+What do you hope to accomplish by filling this position? take pressure off Roger
+What are the major goals/initiatives you would like to see accomplished? Win8 deploy
+Is there anything else you would be looking for a candidate to do? Will be more projects in the future - every laptop encrypted and with intune installed - automated cert pushes (SCOM?)
+From everything that I went over, does it seem like I'm the type of person you are looking for? 
+Best mix of skills, senior member of team they're trying to build. 
+
+Other notes:
+Partners: 
+* Arterian
+* Eastridge
+* Rosebud
+* Tukuru Tech
+* SMB Help Desk
+* InfinIT
+* ZAG Tech Services
+* Baroan Tech
+* LAN Logic
+* Tribridge
+* Perspicuit
+
+CDW: Office 365 Email Migration for Small Businesses by SkyKick 100+ users +/-5 = $65.99 @ 32% markup = $50
+100,00/mo = $500,000
+
+
+-3 year old company
+-team oriented, team working. daily standup. 
+-Server closet with many switches, 2 vhosts with DC VMs
+-where is Dev and test? cloud. 1 in AWS and the rest in Azure. QA has some, others around. 
+-Bizspark?
+-Remote device management
+
+core traits
+1 passion
+2 leaders
+3 excellence
+
+that sounds awesome
+proactive, strive for excellence
+tell them taking notes on phone
+
+-Saved 16 developer hours per week by automating archaic code deploy process
+-Cut image load times by 2/3 by fixing network misconfigurations
+-Used WDS to basically eliminate new PC builds, saving hours of IT system building each month
+-Automated remote parts of manual DNS update process, saving an hour a week
+-BPOS: Wrote program to generate text template, to automate part of the workflow
+
+Job posting:
+COMPANY DESCRIPTION
+SkyKick delivers a new type of application that makes it fast, safe, and easy for IT Solution Providers to move their customers to the cloud. Our award-winning SMB and Enterprise Migration Suites consist of four cloud-based products that work together to help partners automate and seamlessly plan, move, set up, and manage their customer's migration to Office 365.
+
+JOB DESCRIPTION
+We are an award-winning, fast-growing cloud startup in a multi-billion dollar market looking for you – a brilliant, creative, and entrepreneurial IT support engineer to provide assistance to the operations team in resolving technical issues within the office. This is a rare opportunity to come in at the ground floor with an experienced team. 
+
+QUALIFICATIONS
+Responsibilities:
+Installing and configuring computer hardware, software, systems, networks, printers and scanners 
+Planning and undertaking scheduled maintenance upgrades 
+Talking to clients and computer users to determine the nature of problems 
+Responding to breakdowns 
+Investigating, diagnosing and solving computer software and hardware faults 
+Repairing equipment and replacing parts 
+Maintaining records of software licenses 
+Managing stocks of equipment and other supplies. 
+Coordinates with outside contractors to bid work and manage projects 
+Working with ISP to resolve down time issues (RM) 
+Maintaining a highly virtualized Active Directory environment and provisioning users. (RM) 
+Basic PowerShell & automation scripting knowledge. (KS) 
+Active directory responsibilities? (RM) 
+* So far DirSync, WDS, NIC-Teaming, DHCP, Load-balancing, DNS, Primary & Secondary DC's, AD User Database, OU Structure, GPO, and more(KS) 
+* Last things that were being worked on and that they should know: Companywide Windows 8 update, Cloud update services, Automation script for multilevel incremental backups of AD environment to off-site. (KS) 
+Shift and on-call work may be required, particularly where computing equipment is in continual 24-hour operation. 
+Key skills for technical support officers 
+Technical and Organizational skills 
+Interpersonal & Communication skills 
+A meticulous and methodical nature 
+Ability to think analytically and critically 
+Capable of working well under pressure 
+Enthusiasm to be continually learning 
+Resourceful  
+
+Certifications 
+CompTIA A+ Software and Hardware 
+CompTIA Network+ 
+MCSA: Windows Server 
+ADDITIONAL INFORMATION
+We offer a competitive salary, strong equity package, awesome health care, all the usual startup amenities, and a great foosball table. Most importantly this is a great opportunity to make an impact and build something big with a successful and seasoned team.  If you’re a strong team player, and have been waiting for the right opportunity to do something revolutionary and make a huge impact, we’d love to hear from you.
+
+Cortney Moore
+HR-Recruiting Assistant
+SkyKick – The Easiest Way to Office 365
+Desk: 206.212.1728
+Sales & Support:
+   US: 888.503.3367
+   Global:  +1.206.201.1194
+www.skykick.com
+
+
+Resume: 

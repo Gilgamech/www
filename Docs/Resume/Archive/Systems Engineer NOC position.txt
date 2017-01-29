@@ -1,0 +1,72 @@
+Below is a job description and key qualifications provided by the manager.
+ 
+ 
+Top Three Skills:
+Tier 2 Support
+1)NOC/Command Center Monitoring
+2)Process Engineering/Incident Management
+3)Service Management/Documentation
+
+Job Description:
+Position Overview:
+This position participates as a key member of the Global Customer Command Center (GC3) who is responsible for providing 24x7 operational support for GCO customers and Partner locations, monitoring, providing application/tool support, troubleshooting of these application/tools and real time performance analysis and recommendations. The System Analyst must possess work experience in a production, operations, customer facing, mission critical, revenue driven, 24x7 environments. They will be accountable for creating and maintain standards, policies, procedures and documentation for the Global Customer Command Center. This position works under minimal supervision and relies on experience and judgment to plan and accomplish work duties, thus assisting the GC3 to meet or exceed business objectives. This position will also foster an environment of teamwork, leadership, motivation, and excellence.
+
+Responsibilities:
+• Recognize and initiate escalation for all system difficulties or outages including switch, routing systems, computer systems, customized department systems and all applicable supported applications within guidelines.
+• Drive complicated system related issues to resolution across multiple services and groups with little or no supervision. Summarizes key elements of a technical problem and assigns cases to internal and external partners as necessary.
+• Work with highly technical staff supporting Windows, LINUX, UNIX and SQL production servers and network devices.
+• Ensure a consistent method of incident management is followed, including classification, escalation paths and communication protocols.
+• Respond to server and network related support issues affecting agent tools, and ensure they are resolved to the customer’s satisfaction and accordingly to SLA.
+• Maintain constant contact with any impacted contact centers throughout the duration of any crisis event to provide any needed assistance and report any situational changes to the business.
+• Initiate and drive process changes designed to improve efficiency and customer satisfaction.
+• Develop standardization and consistency through process, procedures, change control and workflow management to ensure service excellence.
+• Partner with key teams across the organization to identify and track key metrics.
+• Partner with technical staff to drive resolution of escalated customer issues.
+• Work closely with other technology teams for the deployment, system requirement validation
+• Quickly and effectively learns new systems to rapidly identify potential solutions to assist the reduction of MTTR and/or prevent future service interruptions.
+• Provide drafting and review of technical documentation/process/policy documentation and Trouble Shooting Guides for Tier I personnel.
+• Provide subject area guidance and advice to team and/or internal business groups.
+• Real-time monitoring of critical business operations and performance indicators at an interval level- call volumes, average handle times, queue time, call center agent availability, call center service level adherence.
+Additional Information:
+Qualifications:
+• Must possess significant work experience in a production, mission critical, revenue – dependent 24x7 environment
+• Ability to respond to changing environment and grow technically
+• Ability to initiate and execute problem solving in systems, procedures, reports or analysis, where the area is somewhat defined.
+• Normally receives little instruction on day to day work, general instructions on new assignments, and require some management feedback
+• Proven ability to troubleshoot small to complex systems with an emphasis on Agent Tools/e-Commerce emphasis
+• Must be a critical thinker who can contribute to challenging assignments in a business-critical environment.
+• Flexible working hours to cover all times for support if needed in a 24x7 environment
+• Excellent verbal and written communication and comprehension skills. Must inspire confidence from users and colleagues.
+• Ability to effectively interact with employees at all levels of the organization and work with a variety of people from diverse backgrounds.
+• Service oriented and delivery focused. Will ‘go the extra mile’ to achieve results.
+• Willing to accept ownership problems/issues and see them through.
+• Ability to multitask, work under pressure, to fixed deadlines and a flexible approach to working hours, to meet deadlines.
+Work Experience and Education Guidelines:
+• The qualified candidate possesses 3+ years’ experience in a 24x7 operations role. Command Center, NOC, Production Operations role preferred
+• Bachelor’s degree in Computer Science, IT, or equivalent demonstrated work experience with an emphasis towards operation support
+• ITIL certified, preferred
+• 2+ years of Reports Analysis/Strategic Planning and/or Workforce Management experience in a call center setting preferred
+Core Competencies:
+• Customer Focus - Highly organized with ability to multi-task and motivated with sharp customer focus.
+• Results-driven - Ability to take initiatives and meet deadlines in a fast paced changing environment.
+• Problem Solving/Judgment –Ability to use critical thinking skills to help resolve or mitigate customer impact service issues.
+• Relationship Building – Must have strong interpersonal skills to establish partnerships with key service delivery and operations teams.
+• Technical Competence
+
+Work Environment:
+Very fast paced, minimal direction, need to be highly motivated, technical, etc. They are a dynamic environment that moves quickly. The environment fosters teamwork, leadership, motivation, and excellence.
+Interview Information:
+Still identifying with the customer.
+Who is the Internal/External Customer:
+External customer are the thousands of plus users who leverage their online offerings.
+Impact to the Internal/External Customer:
+They need to build a pro-active monitoring team which will decrease outages, etc.
+Business Challenge:
+They're challenged with having a team that can keep up to speed with their command center, and could lose customers if this isn't fixed.
+
+EVP:
+An opportunity to work on a highly dynamic team within Expedia - Global Customer Command Center. Will go full time, and lots of growth is expected for this team. Also, the manager likes to promote from within her own team.
+
+Non-Technical Skills:
+Personality fit: Being able to work with no direction, self-motivated, go-getter, team player, etc.
+ 

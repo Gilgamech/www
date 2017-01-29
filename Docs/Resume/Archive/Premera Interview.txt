@@ -1,0 +1,63 @@
+This serves as a confirmation for your interview today with Sean McGowan at 2pm.
+Location: Premera Blue Cross, 7001 220th Street Southwest, Mountlake Terrace, WA 98043
+ 
+Good luck and please call if you have any questions moving forward!
+ 
+Refer any questions regarding your pay rate or other employment questions to TEKsystems if possible.
+Please be prepared to write a Thank You note addressed to the interviewer which you will send to me and I will forward on your behalf.
+Be sure to call me once your interview is complete and let me know how it goes!
+ 
+Job Description:
+ 
+This resource will be entirely focused on the building out of Windows servers. The existing team is spread thin with their other duties (maintenance of existing servers and database) and there is an existing backlog of work needed to be done. The backlog of work includes the need to have 300 new VMs built out. 
+
+This resource will be entirely focused on the server builds and will not be involved in meetings, internal politics or any other tasks.
+ 
+About me:
+I'm the one who wants to be your Director of IT.
+* Rebuilt the Summitnet NOC at Reliance.
+* Led the migration of Reliance from Datacenter to Sterling's Cloud.
+* Upgraded Reliance Production from IIS6 to IIS8.5.
+* Upgraded Reliance Corporate from 32bit Win7 to 64bit Win7, C2D to i5, 8GB to 16GB, HDD to SSD.
+* Knows each of your servers personally - their history, their role, their components, their specs, and their needs. 
+* Has the entire domain in his head. Name an error, I can tell you the server that's causing it. And the servers that are down from it, what it does to our sites, and how to fix it, both short term and long term.
+* Highly experienced with non-deterministic non-linear widely-distributed computing systems
+* Goes looking for problems in your systems, so they can be identified, resolved, and documented in case they happen again.
+* I babysit the worst problems in the company.
+* Learns all parts of your business to support and help everywhere I can!
+* By 6 months in, I'll be providing so much value that you'll wonder what you ever did without me.
+
+Strengths & weaknesses:
+-People skills don't come naturally, it's a journey.
+-I'm a know it all, and that can be annoying on a team
+-I'm obsessed with being right. This means I'll change my opinion when I'm wrong, just so I continue to be right. And I'm not afraid to correct teammates. and superiors.
+
+
+
+Employment:
+
+Technologies:
+How much of your service is documented? 
+What operating systems do your teams use?
+What is the biggest technical thorn in your company's side? Why?
+
+HR
+Why is the position open? Expansion or personnel replacement? 
+What are the office's hours?
+Who is the employee who's been here the longest? Who is the hardest to get along with?
+What are you looking for in a candidate, and what do they have to do in order to be successful?
+What do you hope to accomplish by filling this position?
+What are the major goals/initiatives you would like to see accomplished?
+Is there anything else you would be looking for a candidate to do?
+From everything that I went over, does it seem like I'm the type of person you are looking for?
+
+Workflow
+How does the IT workflow deal with randomization? What are the scopes and divisions of work? (Who moves the desks? Who handles sporadic DFS or DNS resolution issues?)
+
+---
+Why am I leaving Reliance?
+-Reliance is disruption-driven, it's a bad fit long-term.
+-Migration is over, NOC is rebuilt
+-I'm automating what's left my job with Powershell
+-Not much else to do, getting boring
+

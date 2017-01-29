@@ -1,0 +1,132 @@
+Stephen Gillie	
+821 9th Ave	
+Seattle, WA 98104
+StephenGillie@Gilgamech.com
+206-458-0493
+Experience
+
+Network Administrator
+Reliance Network
+February 2014 – Present (11 months) 3633 136th Pl. SE, Suite 100, Bellevue WA 98006
+Includes all responsibilities of Assistant System Administrator.
+•	Responsible for all levels of production web hosting environment (more than 20M unique hits a day) on 130 production and 30 development physical & virtual servers across various Windows OSes in colocation facilities and offices in separate states. 
+•	Responsible for all levels of multi-office network with 50 Windows 7 and Windows 8 PCs, laptops, & VMs - from running network cable to VPN routing remote users to externally-routed Internet Explorer testing VMs.
+•	Participate in on-call rotation, and Maintenance Window rotation. Run overnight and weekend emergency conference bridge calls during critical site-down situations. Perform root-cause analysis of site errors and determine course of action to restore sites and services.
+•	Configured VMWare vCenter with Active Directory integration, allowing coworkers to self-manage their own VMs.
+•	Coordinate work between several other network administrators and several engineers employed by a contracted hosting company. Work directly with customer service staff, company ownership, developers and data engineers, colocation and hosting engineers, and building management & engineers through myriad communication channels. Conduct weekly staff meetings.
+•	Manage projects: 
+o	Migrate Production hosting operations from one colocation facility to another in a different state.
+o	Migrate offices from one AD domain to another and from Exchange 2010 to Office365.
+o	Construct development environment from spare hardware with Hyper-V and VMWare 
+•	Used PRTG and New Relic monitoring tools to find and resolve multiple AD, DNS, DFS & other misconfigurations that were causing site issues. Expanded PRTG from 200 to 2000 sensors. 
+•	Led a testing initiative – built testing scenarios, helped coworkers to understand them, and evangelized the need for multiple levels of testing (unit, functional, load) instead of “testing in live” to improve end-user experience.
+•	Learned (self-taught) administration in IIS, Powershell, Windows Clustering & NLB, Netscaler, SQL, Juniper, CDN, and Cisco switches while at this position.
+
+Assistant System Administrator
+Reliance Network
+August 2013 – February 2014 (7 months) Bellevue, WA
+•	Support the Bellevue office's IT needs.
+•	Manage a PC upgrade project to migrate 50 creative and development workstations from 32bit Win7 to 64bit. 
+•	Created a software install list to streamline install process
+•	Coordinated with other employees to ensure they had backups, scheduled PC swaps, and verified functionality afterwards
+•	Troubleshoot and resolve a DFS issue where the namespace would become unavailable when an individual domain controller was offline or rebooting.
+•	Add DR to office and development software shares by copying them to another server, physically driving a server to our new satellite office in another state, and configuring DFS replication through a preconfigured intra-office VPN.
+•	Resolved numerous DNS issues, such as servers not having secondary zones, or having them misconfigured.
+•	Virtualized office/development domain controllers and IE Testing servers. Connected IE Test servers to Clearwire connection (for "true" out-of-network perspective) 
+•	Installed WSUS on a server, controlled Testing VM Internet Explorer version with WSUS groups. Configured Group Policy to have all domain PCs update from WSUS server.
+•	Worked my way into production operations to support our web hosting service.
+•	Learned (self-taught) in DNS, DFS, VMWare, WSUS while at this position.
+•	Provided office administration support:
+o	Point of contact for building facilities requests
+o	Handle all new employee setup:
+?	Creating multiple accounts in multiple ticketing and communications systems, and both domains
+?	Moving desks to the correct location
+?	Assembling PCs from a pile of Dell devices and peripherals
+?	Update and distribute a "Newhire Welcome" page that lists their accounts and passwords, and office resources such as shared folders and printers
+?	Send a "Newhire Welcome" email explaining how to get IT support and what resources we can provide.
+Promoted to Network Manager
+
+Microsoft BPOS Tier 3 Operations Engineer
+TEKsystems
+August 2011 – March 2013 (1 year 6 months) Redmond, WA
+•	Supported 8000 virtual and physical instances of Server 2008 R2 & Server 2003 across several Active Directory forests in multiple international datacenters. Resolved SCOM alerts for most server roles, including Hyper-V hosts, Active Directory, Exchange, IIS, and Data Protection Manager (DPM). 
+•	Maintained service health through rebalancing of databases, applying security patches and Windows updates, collaborating with Technical Support team, Exchange team, Developer team & Site Services team, and use of Hyper-V and HP Integrated Lights Out. Applied customer changes to production servers in Exchange and Active Directory.
+•	Contributed to a reduction in average Mean Time To Resolve (MTTR) for bugs/trouble tickets from 72-96 hours to 4-6 hours and highest-ever reached Service Level (99.99%) in history of BPOS.
+•	Wrote a program in Visual Basic to streamline template creation and distributed to coworkers
+I left this position to pursue my dream of building robots with Arduinos by starting the Gilgamech Robotics project.
+
+Technical Advisor
+Ocean to Ocean Trade
+October 2010 – October 2011 (1 year 1 month) Mercer Island, WA
+•	This is a business I was starting with some college friends. O2O attempted to resell an inventory of HDMI and USB cables, and external optical and hard drives. This was a good learning experience.
+ 
+Technical Support
+Sea-Temp Refrigeration
+April 2011 – August 2011 (5 months) Kent, WA
+•	Increased production capability by diagnosing and repairing a 20-year old Vulcan Lockformer computer-controlled plasma cutting table, and restoring it to service. Created documentation and provided training on its operation. 
+•	Configured PCs, fax, printers, network, and internet for their small office.
+After completing this contract, I went back to BPOS.
+
+Microsoft BPOS Tier 2 Mobile Devices Technical Support Lead
+VMC
+October 2010 – April 2011 (8 months) Redmond, WA
+•	Includes all responsibilities of Tier 1 Mobile Devices Technical Support Agent.
+Provided executive support and international technical support for Exchange Online, ActiveSync, Blackberry Enterprise Server (BES), Android, iPhone & siblings, Nokia, Outlook, Entourage, and other email clients. 
+•	Improved customer relations and confidence in our service through ownership of customer issues and follow-through until issue was resolved to customer satisfaction. Worked with Operations & Exchange teams to solve customer problems. Often specifically requested by customers and Microsoft Partners to handle sensitive situations and technical issues.
+•	Managed overnight incoming queue and dispatched incoming service requests to myself and other engineers based on skill sets and skill levels. Routed other teams' misrouted requests into the correct queue.
+•	Worked as a BPOS & Mobile SME during the night shift, acted as Lead and Manager in lieu of organizational support.
+Ended contract early for personal reasons.
+
+Microsoft BPOS Tier 1 Mobile Devices Technical Support Agent
+VMC
+June 2010 – September 2010 (4 months) Redmond, WA
+Includes all responsibilities of Tier 1 Technical Support Agent.
+•	Receive primarily incoming support requests as phone calls or emails for BES Enterprise Activations. 
+•	Resolved a record 92 customer requests in 1 week (Organization average: 20-30)
+Promoted to Mobile Devices Tier 2.
+
+Microsoft BPOS Tier 1 Technical Support Agent
+VMC
+March 2010 – June 2010 (4 months) Redmond, WA
+•	Receive incoming support requests as phone calls for SharePoint Online, Exchange Online, Office Communicator (Lync) online, and Office Live Meeting.
+•	Provide customer service soft-skills, technical support and assistance in resolving connectivity or configuration issues. 
+•	Provided "Best Effort" support for 3rd party mail clients, became an "expert" in connecting BES and ActiveSync.
+Promoted to Mobile Devices team.
+
+Field Support Technician
+H&R Block
+October 2009 – March 2010 (6 months) Tacoma, WA & Olympia, WA
+Tax-Seasonal Position
+•	Handled all software, network & hardware issues for Windows XP & Server 2003 on 150 HP desktops, and network printers and fax machines
+•	Assembled furniture and several Dell workstations in 20 tax offices around the Puget Sound region and 15 around Portland. Transported hardware in my own car.
+Left for a better contract at VMC
+
+Student System Administrator
+Department of Electrical Engineering - University of Washington
+January 2009 – October 2009 (10 months) University of Washington
+Includes all responsibilities of Student Assistant position.
+•	Handle all software, network & hardware issues for 250 Windows XP desktop PCs in computer labs and classrooms, and Server 2003 & 2008 on 15 rack mount servers. Inventoried existing hardware, incoming new hardware, and old hardware for surplus resale for University financial and insurance databases.
+•	Partially paid for college by working this job.
+•	Had to leave position on graduation as it was student-only.
+Hired as Field Support Technician.
+
+Student Assistant
+Department of Electrical Engineering - University of Washington
+July 2008 – December 2008 (6 months) Seattle, WA
+•	Clean monitors and desks in computer labs. Pick up garbage. Scold students who are eating in computer labs.
+•	Partially paid for college by working this job.
+Promoted to Student System Administrator
+
+Education & Projects
+
+Lead Technologist
+Gilgamech Robotics
+October 2012 – August 2013
+•	Gilgamech Robotics was my project to help advance the state of robotics. After learning the basics of physics, mechanics, chemistry, electrical engineering, and computer programming, I came to realize that robots are simply processors running feedback loops, taking input from sensors around a mobile frame, and outputting power and signal to motors that move the mobile frame, based on the code running on the processor. 
+•	This project is not active, but I retain all the hardware and software. 
+
+Bachelor of Arts in Business Administration
+University of Washington
+September 2007 – August 2009 (1 year 11 months) Seattle, WA
+•	Focus in Information Systems and Finance
+•	UGC Treasurer 2008-2009
