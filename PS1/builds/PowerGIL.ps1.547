@@ -1,11 +1,11 @@
-# C:\Dropbox\repos\www\PS1\PowerGIL.ps1 Build: 548 2017-01-26T09:53:53 Copyright Gilgamech Technologies  
+# C:\Dropbox\repos\www\PS1\PowerGIL.ps1 Build: 547 2017-01-26T09:53:53 Copyright Gilgamech Technologies  
 # Update Path: http://Gilgamech.com/PS1/PowerGIL.ps1
 # Build : LineNo : Update Notes
+# 543 : 696 :  if _!_$Clipboard__ _   $FunctionContents | clip  _ else _   return $FunctionContents  _; #end if Clipboard
 # 544 : 873 :   [switch]$Javascript,
 # 545 : 876 : If _$Javascript_ _  #a _; #end If Javascript
 # 546 : 873 :   [string]$Language,
 # 547 : 876 : Switch _$Language_ _  #a _; #end Switch Language
-# 548 : 800 :  #_ $NewLineVar
 
 #$a,$b=$args-split' +:';-split$a;$b
 <#
@@ -797,7 +797,7 @@ Function New-Parameter {
 				
 			
 			}; #end For i
-			$NewParameterOutstring += ")]" #+ $NewLineVar
+			$NewParameterOutstring += ")]" + $NewLineVar
 			
 		}; #end if ValidateSetList
 		
@@ -871,72 +871,40 @@ Function New-FunctionStatement {
 		[switch]$PipeEqual,
 		[switch]$PipePlus,
 		[switch]$SetVerbose,
-		[ValidateSet("Powershell", "Javascript")][string]$Language,
+		[string]$Language,
 		[switch]$NoComma
 	); #end Param
-	Switch ($Language) {
-		"Powershell" {
-		$PossibleOperators = @{
-			"Equal" = "-eq"
-			"NotEqual" = "-ne"
-			"GreaterThanOrEqual" = "-ge"
-			"GreaterThan" = "-gt"
-			"LessThan" = "-lt"
-			"LessThanOrEqual" = "-le"
-			"Like" = "-like"
-			"NotLike" = "-notlike"
-			"Match" = "-match"
-			"NotMatch" = "-notmatch"
-			"Contains" = "-contains"
-			"NotContains" = "-notcontains"
-			"Or" = "-or"
-			"And" = "-and"
-			"Not" = "-not"
-			"In" = "-in"
-			"NotIn" = "-notin"
-			"Is" = "-is"
-			"IsNot" = "-isnot"
-			"As" = "-as"
-			"BinaryAnd" = "-band"
-			"BinaryOr" = "-bor"
-			"Modulus" = "%"
-		}; #end PossibleOperators
-	}; #end switch Powershell
-	"Javascript" {
-		$PossibleOperators = @{
-			"Equal" = "=="
-			"NotEqual" = "<>"
-			"GreaterThanOrEqual" = "=>"
-			"GreaterThan" = ">"
-			"LessThan" = "<"
-			"LessThanOrEqual" = "<"
-			"Like" = "-like"
-			"NotLike" = "-notlike"
-			"Match" = "-match"
-			"NotMatch" = "-notmatch"
-			"Contains" = "-contains"
-			"NotContains" = "-notcontains"
-			"Or" = "-or"
-			"And" = "&&"
-			"Not" = "!"
-			"In" = "-in"
-			"NotIn" = "-notin"
-			"Is" = "-is"
-			"IsNot" = "-isnot"
-			"As" = "-as"
-			"BinaryAnd" = "-band"
-			"BinaryOr" = "-bor"
-			"Modulus" = "%"
-		}; #end PossibleOperators
-	}; #end switch Javascript
-		default {
-	}; #end switch default
-	}; #end switch Language
+Switch ($Language) {
+	#a
+}; #end Switch Language
 
+	$PossibleOperators = @{
+		"Equal" = "-eq"
+		"NotEqual" = "-ne"
+		"GreaterThanOrEqual" = "-ge"
+		"GreaterThan" = "-gt"
+		"LessThan" = "-lt"
+		"LessThanOrEqual" = "-le"
+		"Like" = "-like"
+		"NotLike" = "-notlike"
+		"Match" = "-match"
+		"NotMatch" = "-notmatch"
+		"Contains" = "-contains"
+		"NotContains" = "-notcontains"
+		"Or" = "-or"
+		"And" = "-and"
+		"Not" = "-not"
+		"In" = "-in"
+		"NotIn" = "-notin"
+		"Is" = "-is"
+		"IsNot" = "-isnot"
+		"As" = "-as"
+		"BinaryAnd" = "-band"
+		"BinaryOr" = "-bor"
+		"Modulus" = "%"
+	} #end list of comparison operators
 	#First things first, convert the ComparisonOperator into its output value.
-	if ($ComparisonOperator) {
-		$CompOp = $PossibleOperators[$ComparisonOperator]
-	}; #end if ComparisonOperator
+	$CompOp = $PossibleOperators[$ComparisonOperator]
 	
 	if (!($ScriptBlock)) {
 		$SB = $True
@@ -960,45 +928,22 @@ Function New-FunctionStatement {
 	}; #end if ScriptBlock
 	#>
 	
-	Switch ($Language) {
-		"Powershell" {
-			[string]$VariableOperator = '$';
-			[string]$Spacevar = " ";
-			[string]$OpeningBracket = '{'
-			[string]$ClosingBracket = '}'
-			[string]$ElseVar = 'else'
-
-			if ($OneLiner) {
-				[string]$ClosingBracketOneLiner = '}'
-			} else {
-				[string]$SingleTabVar = "`t"
-				[string]$TabVar = $SingleTabVar  * ($TabLevel)
-				#[string]$NewLineVar = "`r`n"
-				[string]$NewLineVar = "`n"
-				[string]$ClosingBracketOneLiner = '}; // end' + $Spacevar + $OperatorVar + $Spacevar + $FunctionVariable
-			}; #end if OneLiner
-		}; #end switch Powershell
-		"Javascript" {
-			[string]$VariableOperator = '';
-			[string]$Spacevar = " ";
-			[string]$OpeningBracket = ''
-			[string]$ClosingBracket = ''
-			[string]$ElseVar = 'else'
-			
-			if ($OneLiner) {
-				[string]$ClosingBracketOneLiner = '};'
-			} else {
-				[string]$SingleTabVar = "`t"
-				[string]$TabVar = $SingleTabVar  * ($TabLevel)
-				#[string]$NewLineVar = "`r`n"
-				[string]$NewLineVar = "`n"
-				[string]$ClosingBracketOneLiner = '}; // end' + $Spacevar + $OperatorVar + $Spacevar + $FunctionVariable
-			}; #end if OneLiner
-		}; #end switch Javascript
-		default {
-		}; #end switch default
-	}; #end switch Language
-			
+	[string]$VariableOperator = '$';
+	[string]$Spacevar = " ";
+	[string]$OpeningBracket = '{'
+	[string]$ClosingBracket = '}'
+	[string]$ElseVar = 'else'
+	
+	if ($OneLiner) {
+		[string]$ClosingBracketOneLiner = '}'
+	} else {
+		[string]$SingleTabVar = "`t"
+		[string]$TabVar = $SingleTabVar  * ($TabLevel)
+		#[string]$NewLineVar = "`r`n"
+		[string]$NewLineVar = "`n"
+		[string]$ClosingBracketOneLiner = '}; #end' + $Spacevar + $OperatorVar + $Spacevar + $FunctionVariable
+	}; #end if OneLiner
+		
 	If ($ForDecriment) {
 		$ForIncVar = "--"		
 	} else {
@@ -1105,8 +1050,8 @@ Function New-FunctionStatement {
 		}; #end switch Switch
 		"Elseif" {
 			$BottomHeaderRemoved = $True
-				#Even if we're in an IF, if there's a CompOp set, and no RefVar, set a RefVar.
 			if ($CompOp) {
+				#Even if we're in an IF, if there's a CompOp set, and no RefVar, set a RefVar.
 				if (!($ReferenceVariable)) {
 					$ReferenceVariable = $($FunctionVariable.substring(0,(($FunctionVariable.Length)-1)))
 				}; #end if ReferenceVariable
@@ -1164,7 +1109,7 @@ Function New-FunctionStatement {
 		[string]$SpacevarCORV = " "
 		[string]$VariableOperatorRV = '$';
 	} else {
-		If (!($OperatorVar -eq "IF" -OR $OperatorVar -eq "While" -OR $OperatorVar -eq "ElseIF")) {
+		If (!($OperatorVar -eq "IF" -OR $OperatorVar -eq "While")) {
 			$CompOp = '-le'
 		}; #end If 
 	}; #end if CompOp
@@ -2934,7 +2879,7 @@ Function Get-BadPassword {
 
 	#(09,10,13,(32..126)) #Can't use this because the last section stays stuck together; have to manually write them all out.
 	$PlainTextKey = 9, 10, 13, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126; 
-	$CipherTextKey = 102, 59, 50, 40, 94, 33, 97, 112, 114, 35, 54, 53, 62, 103, 109, 89, 52, 37, 64, 85, 63, 125, 77, 45, 36, 76, 83, 38, 13, 100, 34, 88, 70, 32, 87, 69, 105, 51, 74, 101, 68, 41, 78, 82, 104, 56, 48, 66, 93, 86, 58, 79, 120, 67, 110, 115, 118, 111, 126, 95, 119, 49, 47, 121, 123, 73, 99, 116, 107, 39, 61, 98, 96, 46, 72, 9, 117, 43, 80, 122, 71, 10, 75, 92, 60, 65, 124, 81, 42, 57, 90, 55, 106, 84, 113, 108, 44, 91;
+	$CipherTextKey = 45, 54, 95, 48, 69, 67, 83, 123, 117, 13, 58, 103, 64, 119, 61, 97, 42, 112, 63, 51, 84, 43, 101, 78, 41, 75, 55, 34, 66, 76, 72, 62, 71, 35, 93, 33, 107, 106, 9, 32, 108, 109, 92, 50, 102, 68, 80, 124, 73, 81, 44, 111, 65, 104, 96, 49, 70, 98, 87, 91, 77, 40, 120, 114, 53, 100, 113, 125, 110, 74, 60, 57, 99, 37, 10, 121, 82, 90, 36, 88, 46, 94, 105, 38, 86, 47, 59, 52, 89, 122, 116, 118, 39, 85, 56, 79, 126, 115;
 	
 	$PlainTextAlpha = -Join ($PlainTextKey | Flip-BytesToText -ASCII)
 	$CipherTextAlpha = -Join ($CipherTextKey | Flip-BytesToText -ASCII)
